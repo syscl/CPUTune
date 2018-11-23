@@ -11,8 +11,23 @@
 
 OSDefineMetaClassAndStructors(CPUTune, IOService)
 
+IOService *CPUTune::probe(IOService *provider, SInt32 *score) {
+    setProperty("VersionInfo", kextVersion);
+    setProperty("Author", "syscl");
+    auto service = IOService::probe(provider, score);
+    return service;
+}
+
 bool CPUTune::init(OSDictionary *dict)
 {
+    auto isDisabled = checkKernelArgument("-s") |
+                      checkKernelArgument("-x") |
+                      checkKernelArgument(bootargOff) |
+                      (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta));
+    if (isDisabled) {
+        myLOG("init: not allow to run.");
+        return false;
+    }
     bool ret = super::init(dict);
     if (!ret) {
         myLOG("init: failed!");
@@ -38,13 +53,14 @@ bool CPUTune::start(IOService *provider)
     OSBoolean *key_enableTurboBoost = OSDynamicCast(OSBoolean, getProperty("enableTurboBoost"));
     if (key_enableTurboBoost) {
         // key exists
-        bool enableIntelTB = static_cast<bool>(key_enableTurboBoost->getValue());
+        auto enableIntelTB = key_enableTurboBoost->isTrue();
         if (enableIntelTB) {
             enableTurboBoost();
         } else {
             disableTurboBoost();
         }
     }
+    OSSafeReleaseNULL(key_enableTurboBoost);
     myLOG("start: registerService");
     registerService();
     return ret;

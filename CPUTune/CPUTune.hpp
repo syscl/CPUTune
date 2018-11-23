@@ -16,13 +16,13 @@ class CPUTune : public IOService
     using super = IOService;
     
 public:
+    IOService *probe(IOService *provider, SInt32 *score) override;
     virtual bool init(OSDictionary *dict) override;
     virtual bool start(IOService *provider) override;
     virtual void stop(IOService *provider) override;
     virtual void free(void) override;
     
 private:
-    uint64_t getTurboBoostState(void) const;
     void enableTurboBoost(void);
     void disableTurboBoost(void);
     
