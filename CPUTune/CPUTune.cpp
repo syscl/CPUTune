@@ -13,7 +13,6 @@ OSDefineMetaClassAndStructors(CPUTune, IOService)
 
 bool CPUTune::init(OSDictionary *dict)
 {
-    myLOG("init ===>", __func__);
     bool ret = super::init(dict);
     if (!ret) {
         myLOG("init: failed!");
@@ -22,13 +21,11 @@ bool CPUTune::init(OSDictionary *dict)
     myLOG("init: successed!");
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
-    myLOG("init <===");
     return ret;
 }
 
 bool CPUTune::start(IOService *provider)
 {
-    myLOG("start: ===>");
     bool ret = super::start(provider);
     if (!ret || provider == nullptr) {
         myLOG("start: cannot start provider or provider not exist.");
@@ -51,7 +48,6 @@ bool CPUTune::start(IOService *provider)
     disableTurboBoost();
     myLOG("start: registerService");
     registerService();
-    myLOG("start <===");
     return ret;
 }
 
