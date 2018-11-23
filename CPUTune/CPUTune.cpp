@@ -57,7 +57,7 @@ void CPUTune::enableTurboBoost()
     // flip bit 38 to 0
     val &= ((uint64_t)-1) ^ ((uint64_t)1) << 38;
     myLOG("enableTurboBoost: set MSR_IA32_MISC_ENABLE value: 0x%llx", val);
-    wrmsr64(MSR_IA32_PERF_CTL, val);
+    wrmsr64(MSR_IA32_MISC_ENABLE, val);
 }
 
 void CPUTune::disableTurboBoost()
