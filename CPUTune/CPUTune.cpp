@@ -45,7 +45,6 @@ bool CPUTune::start(IOService *provider)
             disableTurboBoost();
         }
     }
-    disableTurboBoost();
     myLOG("start: registerService");
     registerService();
     return ret;
