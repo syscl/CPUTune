@@ -26,9 +26,14 @@ private:
     void enableTurboBoost(void);
     void disableTurboBoost(void);
     
+    void enableSpeedShift(void);
+    void disableSpeedShift(void);
+    
 protected:
     uint64_t org_MSR_IA32_MISC_ENABLE;
     uint64_t org_MSR_IA32_PERF_CTL;
+    
+    uint64_t org_MSR_IA32_PM_ENABLE;
 };
 
 #endif /* CPUTune_hpp */

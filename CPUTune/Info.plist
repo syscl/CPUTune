@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.1</string>
+	<string>1.1.9</string>
 	<key>CFBundleVersion</key>
-	<string>1.1.1</string>
+	<string>1.1.9</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>CPUTune</key>
@@ -33,6 +33,8 @@
 			<key>IOResourceMatch</key>
 			<string>IOKit</string>
 			<key>enableTurboBoost</key>
+			<false/>
+			<key>disableSpeedShift</key>
 			<false/>
 		</dict>
 	</dict>

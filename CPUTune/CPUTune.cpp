@@ -7,6 +7,7 @@
 
 #include <i386/proc_reg.h>
 #include <CPUTune.hpp>
+#include <CPUInfo.hpp>
 #include <kern_util.hpp>
 
 OSDefineMetaClassAndStructors(CPUTune, IOService)
@@ -61,6 +62,22 @@ bool CPUTune::start(IOService *provider)
         }
     }
     OSSafeReleaseNULL(key_enableTurboBoost);
+    OSBoolean *key_disableSpeedShift = OSDynamicCast(OSBoolean, getProperty("disableSpeedShift"));
+    if (key_disableSpeedShift) {
+        // key exists
+        auto disableSpeedShift = key_disableSpeedShift->isTrue();
+        CPUInfo cpu_info = CPUInfo();
+        if (cpu_info.cpuModel >= cpu_info.CPU_MODEL_SKYLAKE) {
+            if (disableSpeedShift) {
+                this->disableSpeedShift();
+            } else {
+                enableSpeedShift();
+            }
+        } else {
+            myLOG("start: cpu model does not support Intel SpeedShift.");
+        }
+    }
+    OSSafeReleaseNULL(key_disableSpeedShift);
     myLOG("start: registerService");
     registerService();
     return ret;
@@ -90,6 +107,30 @@ void CPUTune::disableTurboBoost()
     val |= ~(((uint64_t)-1) ^ ((uint64_t)1) << 38);
     myLOG("disableTurboBoost: set MSR_IA32_MISC_ENABLE value: 0x%llx", val);
     wrmsr64(MSR_IA32_MISC_ENABLE, val);
+}
+
+void CPUTune::enableSpeedShift()
+{
+    auto val = rdmsr64(MSR_IA32_PM_ENABLE);
+    myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
+    if (val != 0x1) {
+        myLOG("enableSpeedShift: Intel SpeedShift is disabled, turn it on.");
+        wrmsr64(MSR_IA32_PM_ENABLE, 0x1);
+    } else {
+        myLOG("enableSpeedShift: Intel SpeedShift is already enabled.");
+    }
+}
+
+void CPUTune::disableSpeedShift()
+{
+    auto val = rdmsr64(MSR_IA32_PM_ENABLE);
+    myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
+    if (val != 0) {
+        myLOG("enableSpeedShift: Intel SpeedShift is enabled, turn it off.");
+        wrmsr64(MSR_IA32_PM_ENABLE, 0);
+    } else {
+        myLOG("enableSpeedShift: Intel SpeedShift is already disabled.");
+    }
 }
 
 void CPUTune::stop(IOService *provider)
