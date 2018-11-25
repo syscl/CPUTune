@@ -11,6 +11,8 @@
 		E806014821A7D22600B4E214 /* kern_util.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E806014621A7D22600B4E214 /* kern_util.hpp */; };
 		E819949921A90DC00019C605 /* CPUInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E819949721A90DC00019C605 /* CPUInfo.cpp */; };
 		E819949A21A90DC00019C605 /* CPUInfo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E819949821A90DC00019C605 /* CPUInfo.hpp */; };
+		E81A35CC21AA78C100A101FD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E81A35CB21AA78C100A101FD /* README.md */; };
+		E81A35CE21AA7B6F00A101FD /* Changelog.md in Resources */ = {isa = PBXBuildFile; fileRef = E81A35CD21AA7B6F00A101FD /* Changelog.md */; };
 		E8D5861821A7BB1C001CCF6A /* CPUTune.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E8D5861721A7BB1C001CCF6A /* CPUTune.hpp */; };
 		E8D5861A21A7BB1C001CCF6A /* CPUTune.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8D5861921A7BB1C001CCF6A /* CPUTune.cpp */; };
 /* End PBXBuildFile section */
@@ -20,6 +22,8 @@
 		E806014621A7D22600B4E214 /* kern_util.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kern_util.hpp; sourceTree = "<group>"; };
 		E819949721A90DC00019C605 /* CPUInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUInfo.cpp; sourceTree = "<group>"; };
 		E819949821A90DC00019C605 /* CPUInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInfo.hpp; sourceTree = "<group>"; };
+		E81A35CB21AA78C100A101FD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		E81A35CD21AA7B6F00A101FD /* Changelog.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Changelog.md; sourceTree = SOURCE_ROOT; };
 		E8D5861421A7BB1C001CCF6A /* CPUTune.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTune.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D5861721A7BB1C001CCF6A /* CPUTune.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUTune.hpp; sourceTree = "<group>"; };
 		E8D5861921A7BB1C001CCF6A /* CPUTune.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUTune.cpp; sourceTree = "<group>"; };
@@ -37,10 +41,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E81A35CA21AA787500A101FD /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+				E81A35CB21AA78C100A101FD /* README.md */,
+				E81A35CD21AA7B6F00A101FD /* Changelog.md */,
+			);
+			path = Docs;
+			sourceTree = "<group>";
+		};
 		E8D5860A21A7BB1C001CCF6A = {
 			isa = PBXGroup;
 			children = (
 				E8D5861621A7BB1C001CCF6A /* CPUTune */,
+				E81A35CA21AA787500A101FD /* Docs */,
 				E8D5861521A7BB1C001CCF6A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -137,6 +151,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E81A35CC21AA78C100A101FD /* README.md in Resources */,
+				E81A35CE21AA7B6F00A101FD /* Changelog.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
