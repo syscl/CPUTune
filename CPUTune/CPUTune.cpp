@@ -93,25 +93,23 @@ bool CPUTune::start(IOService *provider)
         sip_tune->allowUnrestrictedFS();
     }
     
-    if (turboBoostPath || speedShiftPath) {
-        // set up time event
-        myWorkLoop = static_cast<IOWorkLoop *>(getWorkLoop());
-        timerSource = IOTimerEventSource::timerEventSource(this,
-            OSMemberFunctionCast(IOTimerEventSource::Action, this, &CPUTune::readConfigAtRuntime));
-        if (!timerSource) {
-            myLOG("start: failed to create timer event source!");
-            // Handle error (typically by returning a failure result).
-            return false;
-        }
-        
-        if (myWorkLoop->addEventSource(timerSource) != kIOReturnSuccess) {
-            myLOG("start: failed to add timer event source to work loop!");
-            // Handle error (typically by returning a failure result).
-            return false;
-        }
-        
-        timerSource->setTimeoutMS(1000);
+    // set up time event
+    myWorkLoop = static_cast<IOWorkLoop *>(getWorkLoop());
+    timerSource = IOTimerEventSource::timerEventSource(this,
+                    OSMemberFunctionCast(IOTimerEventSource::Action, this, &CPUTune::readConfigAtRuntime));
+    if (!timerSource) {
+        myLOG("start: failed to create timer event source!");
+        // Handle error (typically by returning a failure result).
+        return false;
     }
+    
+    if (myWorkLoop->addEventSource(timerSource) != kIOReturnSuccess) {
+        myLOG("start: failed to add timer event source to work loop!");
+        // Handle error (typically by returning a failure result).
+        return false;
+    }
+    
+    timerSource->setTimeoutMS(2000);
     
     // check if we need to enable Intel Turbo Boost
     if (enableIntelTurboBoost) {
@@ -155,10 +153,6 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         // check if currently request enable turbo boost
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
-//        if (buffer) {
-//            delete buffer;
-//            buffer = nullptr;
-//        }
         deleter(buffer);
         if (curr != prev) {
             myLOG("readConfigAtRuntime: %s Intel Turbo Boost", curr ? "enable" : "disable");

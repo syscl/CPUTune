@@ -1,5 +1,8 @@
 CPUTune Changelog
 =======================
+### v1.8.1
+- Regularly checks profiles
+
 ### v1.8.0
 - Allowed SIP control a bit easier via Info.plist tunning instead of reboot to recovery mode on a real mac
 - Simplify memory deallocate code blocks via deleter routine

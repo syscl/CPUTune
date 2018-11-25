@@ -14,7 +14,7 @@ SIPTune::SIPTune() : gBootCSRActiveConfig(getBootCSRActiveConfig())
 
 SIPTune::~SIPTune()
 {
-    // we cannot delete it otherwise we remove CSRActiveConfig in boot_args
+    // we cannot delete it otherwise we remove csrActiveConfig in boot_args
     gBootCSRActiveConfig = nullptr;
 }
 
