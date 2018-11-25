@@ -51,7 +51,7 @@ void CPUTune::initKextPerferences()
     OSString *keyTurboBoostAtRuntime = OSDynamicCast(OSString, getProperty("TurboBoostAtRuntime"));
     OSString *keySpeedShiftAtRuntime = OSDynamicCast(OSString, getProperty("SpeedShiftAtRuntime"));
     OSBoolean *keyEnableTurboBoost = OSDynamicCast(OSBoolean, getProperty("enableTurboBoost"));
-    OSBoolean *keyDisableSpeedShift = OSDynamicCast(OSBoolean, getProperty("disableSpeedShift"));
+    OSBoolean *keyEnableSpeedShift = OSDynamicCast(OSBoolean, getProperty("enableSpeedShift"));
     
     if (keyTurboBoostAtRuntime != nullptr) {
         turboBoostPath = const_cast<const char *>(keyTurboBoostAtRuntime->getCStringNoCopy());
@@ -63,7 +63,7 @@ void CPUTune::initKextPerferences()
 
     enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
     supportedSpeedShift = cpu_info->model >= cpu_info->CPU_MODEL_SKYLAKE;
-    disableIntelSpeedShift = keyDisableSpeedShift && keyDisableSpeedShift->isTrue();
+    enableIntelSpeedShift = keyEnableSpeedShift && keyEnableSpeedShift->isTrue();
 }
 
 bool CPUTune::start(IOService *provider)
@@ -103,13 +103,15 @@ bool CPUTune::start(IOService *provider)
         disableTurboBoost();
     }
     
-    // check if we need to disable Intel Speed Shift on platform on Skylake+
+    // check if we need to enable Intel Speed Shift on platform on Skylake+
     if (supportedSpeedShift) {
-        if (disableIntelSpeedShift) {
-            disableSpeedShift();
-        } else {
+        if (enableIntelSpeedShift) {
+            // Note this bit can only be enabled once from the default value.
+            // Once set, writes to the HWP_ENABLE bit are ignored. Only RESET
+            // will clear this bit. Default = zero (0).
             enableSpeedShift();
-        }
+            hwpEnableOnceSet = true;
+        } 
     } else {
         myLOG("start: cpu model (0x%x) does not support Intel SpeedShift.", cpu_info->model);
     }
@@ -150,25 +152,25 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         }
     }
     
-    if (supportedSpeedShift && speedShiftPath) {
+    if (!hwpEnableOnceSet && supportedSpeedShift && speedShiftPath) {
         // check if previous speed shift is enabled
-        bool prev = rdmsr64(MSR_IA32_PM_ENABLE);
+        bool prev = rdmsr64(MSR_IA32_PM_ENABLE) == kEnableSpeedShiftBit;
         size_t bytes = 1;
         uint8_t *buffer = readFileNBytes(speedShiftPath, 0, bytes);
         // check if currently request enable speed shift
         bool curr = buffer && (*buffer == '1');
-        // deallocate the buffer
-        if (buffer) {
-            delete buffer;
-            buffer = nullptr;
-        }
-        if (curr != prev) {
+        if (buffer && curr != prev) {
             myLOG("readConfigAtRuntime: %s Intel Speed Shift", curr ? "enable" : "disable");
             if (curr) {
                 enableSpeedShift();
             } else {
                 disableSpeedShift();
             }
+        }
+        // deallocate the buffer
+        if (buffer) {
+            delete buffer;
+            buffer = nullptr;
         }
     }
     sender->setTimeoutMS(2000);

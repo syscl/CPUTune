@@ -28,7 +28,11 @@ private:
     const char *speedShiftPath = nullptr;
     bool enableIntelTurboBoost = true;
     bool supportedSpeedShift = false;
-    bool disableIntelSpeedShift = false;
+    // As 64-ia-32-architectures-software-developer-vol-3b-part-2-manual (Vol. 3B 14-7)
+    // Only RESET will clear this bit.
+    bool enableIntelSpeedShift = true;
+    bool hwpEnableOnceSet = false;
+    
     void initKextPerferences();
     
     static constexpr uint64_t kEnableTurboBoostBits  = ((uint64_t)-1) ^ ((uint64_t)1) << 38;

@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6.6</string>
+	<string>1.7.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.6.6</string>
+	<string>1.7.0</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>CPUTune</key>
@@ -32,14 +32,14 @@
 			<string>IOResources</string>
 			<key>IOResourceMatch</key>
 			<string>IOKit</string>
-			<key>enableTurboBoost</key>
-			<false/>
-			<key>disableSpeedShift</key>
-			<false/>
-			<key>TurboBoostAtRuntime</key>
-			<string>/tmp/CPUTuneTurboBoostRT.conf</string>
 			<key>SpeedShiftAtRuntime</key>
 			<string>/tmp/CPUTuneSpeedShiftRT.conf</string>
+			<key>TurboBoostAtRuntime</key>
+			<string>/tmp/CPUTuneTurboBoostRT.conf</string>
+			<key>enableSpeedShift</key>
+			<true/>
+			<key>enableTurboBoost</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>

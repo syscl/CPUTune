@@ -97,8 +97,10 @@ uint8_t *readFileNBytes(const char* path, off_t off, size_t bytes) {
             buffer = new uint8_t[bytes + 1];
             if (readFileData(buffer, 0, bytes, vnode, ctx)) {
                 // fail to read file
-                if (buffer)
+                if (buffer) {
                     delete buffer;
+                    buffer = nullptr;
+                }
             } else {
                 // gurantee null termination
                 buffer[bytes] = 0;
