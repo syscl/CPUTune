@@ -80,7 +80,7 @@ bool CPUTune::start(IOService *provider)
         // set up time event
         myWorkLoop = static_cast<IOWorkLoop *>(getWorkLoop());
         timerSource = IOTimerEventSource::timerEventSource(this,
-                                                           OSMemberFunctionCast(IOTimerEventSource::Action, this, &CPUTune::readConfigAtRuntime));
+            OSMemberFunctionCast(IOTimerEventSource::Action, this, &CPUTune::readConfigAtRuntime));
         if (!timerSource) {
             myLOG("start: failed to create timer event source!");
             // Handle error (typically by returning a failure result).
@@ -131,14 +131,15 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     if (turboBoostPath) {
         // check if previous turbo boost is enabled
         bool prev = rdmsr64(MSR_IA32_MISC_ENABLE) == (org_MSR_IA32_MISC_ENABLE & kEnableTurboBoostBits);
-//        uint8_t *buffer = readBytes(turboBoostPath, 0, 1);
         size_t bytes = 1;
         uint8_t *buffer = readFileNBytes(turboBoostPath, 0, bytes);
         // check if currently request enable turbo boost
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
-        if (buffer)
+        if (buffer) {
             delete buffer;
+            buffer = nullptr;
+        }
         if (curr != prev) {
             myLOG("readConfigAtRuntime: %s Intel Turbo Boost", curr ? "enable" : "disable");
             if (curr) {
@@ -157,8 +158,10 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         // check if currently request enable speed shift
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
-        if (buffer)
+        if (buffer) {
             delete buffer;
+            buffer = nullptr;
+        }
         if (curr != prev) {
             myLOG("readConfigAtRuntime: %s Intel Speed Shift", curr ? "enable" : "disable");
             if (curr) {
