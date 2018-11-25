@@ -9,7 +9,8 @@
 #define CPUTune_hpp
 
 #include <IOKit/IOService.h>
-#include "CPUInfo.hpp"
+#include <CPUInfo.hpp>
+#include <SIPTune.hpp>
 
 class CPUTune : public IOService
 {
@@ -57,10 +58,19 @@ private:
     
     CPUInfo *cpu_info {nullptr};
     
+    SIPTune *sip_tune {nullptr};
+    bool allowUnrestrictedFS = false;
+    
     uint64_t org_MSR_IA32_MISC_ENABLE;
     uint64_t org_MSR_IA32_PERF_CTL;
     
     uint64_t org_MSR_IA32_PM_ENABLE;
+    
+    template<typename T>
+    static void deleter(T *&p) {
+        delete p;
+        p = nullptr;
+    }
 };
 
 #endif /* CPUTune_hpp */

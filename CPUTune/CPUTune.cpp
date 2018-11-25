@@ -8,6 +8,7 @@
 #include <i386/proc_reg.h>
 #include <CPUTune.hpp>
 #include <CPUInfo.hpp>
+#include <SIPTune.hpp>
 #include <kern_util.hpp>
 #include <IOKit/IOTimerEventSource.h>
 
@@ -40,7 +41,15 @@ bool CPUTune::init(OSDictionary *dict)
         myLOG("init: cannot allocate class CPUInfo.");
         return false;
     }
+    
+    sip_tune = new SIPTune();
+    if (sip_tune == nullptr) {
+        myLOG("init: cannot allocate class SIPTune.");
+        return false;
+    }
+    
     myLOG("init: successed!");
+    
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
     return ret;
@@ -50,8 +59,9 @@ void CPUTune::initKextPerferences()
 {
     OSString *keyTurboBoostAtRuntime = OSDynamicCast(OSString, getProperty("TurboBoostAtRuntime"));
     OSString *keySpeedShiftAtRuntime = OSDynamicCast(OSString, getProperty("SpeedShiftAtRuntime"));
-    OSBoolean *keyEnableTurboBoost = OSDynamicCast(OSBoolean, getProperty("enableTurboBoost"));
-    OSBoolean *keyEnableSpeedShift = OSDynamicCast(OSBoolean, getProperty("enableSpeedShift"));
+    OSBoolean *keyEnableTurboBoost = OSDynamicCast(OSBoolean, getProperty("EnableTurboBoost"));
+    OSBoolean *keyEnableSpeedShift = OSDynamicCast(OSBoolean, getProperty("EnableSpeedShift"));
+    OSBoolean *keyAllowUnrestrictedFS = OSDynamicCast(OSBoolean, getProperty("AllowUnrestrictedFS"));
     
     if (keyTurboBoostAtRuntime != nullptr) {
         turboBoostPath = const_cast<const char *>(keyTurboBoostAtRuntime->getCStringNoCopy());
@@ -64,6 +74,8 @@ void CPUTune::initKextPerferences()
     enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
     supportedSpeedShift = cpu_info->model >= cpu_info->CPU_MODEL_SKYLAKE;
     enableIntelSpeedShift = keyEnableSpeedShift && keyEnableSpeedShift->isTrue();
+    
+    allowUnrestrictedFS = keyAllowUnrestrictedFS && keyAllowUnrestrictedFS->isTrue();
 }
 
 bool CPUTune::start(IOService *provider)
@@ -75,6 +87,11 @@ bool CPUTune::start(IOService *provider)
     }
     
     initKextPerferences();
+    
+    // let's turn off some off the SIP bits so that we can debug it easily on a real mac
+    if (allowUnrestrictedFS) {
+        sip_tune->allowUnrestrictedFS();
+    }
     
     if (turboBoostPath || speedShiftPath) {
         // set up time event
@@ -138,10 +155,11 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         // check if currently request enable turbo boost
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
-        if (buffer) {
-            delete buffer;
-            buffer = nullptr;
-        }
+//        if (buffer) {
+//            delete buffer;
+//            buffer = nullptr;
+//        }
+        deleter(buffer);
         if (curr != prev) {
             myLOG("readConfigAtRuntime: %s Intel Turbo Boost", curr ? "enable" : "disable");
             if (curr) {
@@ -168,10 +186,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             }
         }
         // deallocate the buffer
-        if (buffer) {
-            delete buffer;
-            buffer = nullptr;
-        }
+        deleter(buffer);
     }
     sender->setTimeoutMS(2000);
 }
@@ -267,9 +282,7 @@ void CPUTune::stop(IOService *provider)
 
 void CPUTune::free(void)
 {
-    if (cpu_info) {
-        delete cpu_info;
-        cpu_info = nullptr;
-    }
+    deleter(cpu_info);
+    deleter(sip_tune);
     super::free();
 }

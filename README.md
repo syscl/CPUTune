@@ -7,6 +7,7 @@ An open source kernel extension enables dynamic CPU performance tuning at runtim
 - Allows tuning on or off Intel Turbo Boost for better battery life
 - Allows tuning on or off Intel Speed Shift for maximum performance
 - Implements TimerEvent-based responses for dynamical switching Turbo Boost and Speed Shift at runtime
+- Allows System Integrity Protection (SIP) control a bit easier via Info.plist setting 
 
 #### Boot arguments
 - Add `-cputoff` to disable CPUTune

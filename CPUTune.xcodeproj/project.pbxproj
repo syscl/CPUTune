@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		E806014721A7D22600B4E214 /* kern_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E806014521A7D22600B4E214 /* kern_util.cpp */; };
 		E806014821A7D22600B4E214 /* kern_util.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E806014621A7D22600B4E214 /* kern_util.hpp */; };
+		E80B7FCC21AB278B00B8793B /* csr.h in Headers */ = {isa = PBXBuildFile; fileRef = E80B7FCB21AB278B00B8793B /* csr.h */; };
+		E811BF7121AB1B44001BFDC2 /* SIPTune.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E811BF6F21AB1B44001BFDC2 /* SIPTune.cpp */; };
+		E811BF7221AB1B44001BFDC2 /* SIPTune.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E811BF7021AB1B44001BFDC2 /* SIPTune.hpp */; };
 		E819949921A90DC00019C605 /* CPUInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E819949721A90DC00019C605 /* CPUInfo.cpp */; };
 		E819949A21A90DC00019C605 /* CPUInfo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E819949821A90DC00019C605 /* CPUInfo.hpp */; };
 		E81A35CC21AA78C100A101FD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E81A35CB21AA78C100A101FD /* README.md */; };
@@ -20,6 +23,9 @@
 /* Begin PBXFileReference section */
 		E806014521A7D22600B4E214 /* kern_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kern_util.cpp; sourceTree = "<group>"; };
 		E806014621A7D22600B4E214 /* kern_util.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kern_util.hpp; sourceTree = "<group>"; };
+		E80B7FCB21AB278B00B8793B /* csr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = csr.h; sourceTree = "<group>"; };
+		E811BF6F21AB1B44001BFDC2 /* SIPTune.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SIPTune.cpp; sourceTree = "<group>"; };
+		E811BF7021AB1B44001BFDC2 /* SIPTune.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SIPTune.hpp; sourceTree = "<group>"; };
 		E819949721A90DC00019C605 /* CPUInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUInfo.cpp; sourceTree = "<group>"; };
 		E819949821A90DC00019C605 /* CPUInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInfo.hpp; sourceTree = "<group>"; };
 		E81A35CB21AA78C100A101FD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
@@ -74,6 +80,9 @@
 				E8D5861921A7BB1C001CCF6A /* CPUTune.cpp */,
 				E819949821A90DC00019C605 /* CPUInfo.hpp */,
 				E819949721A90DC00019C605 /* CPUInfo.cpp */,
+				E80B7FCB21AB278B00B8793B /* csr.h */,
+				E811BF7021AB1B44001BFDC2 /* SIPTune.hpp */,
+				E811BF6F21AB1B44001BFDC2 /* SIPTune.cpp */,
 				E806014621A7D22600B4E214 /* kern_util.hpp */,
 				E806014521A7D22600B4E214 /* kern_util.cpp */,
 				E8D5861B21A7BB1C001CCF6A /* Info.plist */,
@@ -89,7 +98,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E806014821A7D22600B4E214 /* kern_util.hpp in Headers */,
+				E811BF7221AB1B44001BFDC2 /* SIPTune.hpp in Headers */,
 				E8D5861821A7BB1C001CCF6A /* CPUTune.hpp in Headers */,
+				E80B7FCC21AB278B00B8793B /* csr.h in Headers */,
 				E819949A21A90DC00019C605 /* CPUInfo.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,6 +175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E811BF7121AB1B44001BFDC2 /* SIPTune.cpp in Sources */,
 				E8D5861A21A7BB1C001CCF6A /* CPUTune.cpp in Sources */,
 				E806014721A7D22600B4E214 /* kern_util.cpp in Sources */,
 				E819949921A90DC00019C605 /* CPUInfo.cpp in Sources */,
