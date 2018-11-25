@@ -9,6 +9,7 @@
 #define CPUTune_hpp
 
 #include <IOKit/IOService.h>
+#include "CPUInfo.hpp"
 
 class CPUTune : public IOService
 {
@@ -23,13 +24,35 @@ public:
     virtual void free(void) override;
     
 private:
+    const char *turboBoostPath = nullptr;
+    const char *speedShiftPath = nullptr;
+    bool enableIntelTurboBoost = true;
+    bool supportedSpeedShift = false;
+    bool disableIntelSpeedShift = false;
+    void initKextPerferences();
+    
+    static constexpr uint64_t kEnableTurboBoostBits  = ((uint64_t)-1) ^ ((uint64_t)1) << 38;
+    static constexpr uint64_t kDisableTurboBoostBits = ~kEnableTurboBoostBits;
+    
+    static constexpr uint64_t kEnableSpeedShiftBit  = 0x1;
+    static constexpr uint64_t kDisableSpeedShiftBit = 0;
+    
+    
+    IOWorkLoop *myWorkLoop;
+    IOTimerEventSource *timerSource;
+    void readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender);
+    bool logTurboBoostConfMissing = false;
+    bool logSpeedShiftConfMissing = false;
+    
+    
     void enableTurboBoost(void);
     void disableTurboBoost(void);
     
     void enableSpeedShift(void);
     void disableSpeedShift(void);
     
-protected:
+    CPUInfo *cpu_info {nullptr};
+    
     uint64_t org_MSR_IA32_MISC_ENABLE;
     uint64_t org_MSR_IA32_PERF_CTL;
     

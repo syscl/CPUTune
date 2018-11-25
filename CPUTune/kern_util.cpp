@@ -21,8 +21,8 @@ int writeBufferToFile(const char *path, char *buffer) {
     vnode_t vp = NULLVP;
     vfs_context_t ctxt = vfs_context_create(nullptr);
     
-    int fmode=O_TRUNC | O_CREAT | FWRITE | O_NOFOLLOW;
-    int cmode=S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+    int fmode = O_TRUNC | O_CREAT | FWRITE | O_NOFOLLOW;
+    int cmode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
     
     if (ctxt) {
         if ((err = vnode_open(path, fmode, cmode, VNODE_LOOKUP_NOFOLLOW, &vp, ctxt))) {
@@ -50,6 +50,72 @@ int writeBufferToFile(const char *path, char *buffer) {
     
     return err;
 }
+
+int readFileData(void *buffer, off_t off, size_t size, vnode_t vnode, vfs_context_t ctxt) {
+    uio_t uio = uio_create(1, off, UIO_SYSSPACE, UIO_READ);
+    if (!uio) {
+        // myLOG("readFileData: uio_create returned null!");
+        return EINVAL;
+    }
+    
+    // imitate the kernel and read a single page from the file
+    int error = uio_addiov(uio, CAST_USER_ADDR_T(buffer), size);
+    if (error) {
+        // myLOG("readFileData: uio_addiov returned error %d!", error);
+        return error;
+    }
+    
+    if ((error = VNOP_READ(vnode, uio, 0, ctxt))) {
+        return error;
+    }
+    
+    if (uio_resid(uio)) {
+        // uio_resid returned non-null
+        return EINVAL;
+    }
+    
+    return error;
+}
+
+uint8_t *readFileNBytes(const char* path, off_t off, size_t bytes) {
+    vnode_t vnode = NULLVP;
+    vfs_context_t ctx = vfs_context_create(nullptr);
+    
+    errno_t err = vnode_lookup(path, 0, &vnode, ctx);
+    
+    uint8_t *buffer = nullptr;
+    if (!err) {
+        // get the size of the file
+        vnode_attr va;
+        VATTR_INIT(&va);
+        VATTR_WANTED(&va, va_data_size);
+        size_t size = vnode_getattr(vnode, &va, ctx) ? 0 : va.va_data_size;
+        
+        // compare which one is smaller
+        bytes = bytes < size ? bytes : size;
+        if (bytes > 0) {
+            buffer = new uint8_t[bytes + 1];
+            if (readFileData(buffer, 0, bytes, vnode, ctx)) {
+                // fail to read file
+                if (buffer)
+                    delete buffer;
+            } else {
+                // gurantee null termination
+                buffer[bytes] = 0;
+            }
+        } else {
+            // size of the file is empty or bytes is zero
+        }
+        vnode_put(vnode);
+    } else {
+        // fail to find file via path
+    }
+    
+    vfs_context_rele(ctx);
+    
+    return buffer;
+}
+
 
 void cputune_os_log(const char *format, ...) {
     char tmp[1024];

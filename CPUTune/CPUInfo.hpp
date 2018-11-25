@@ -20,23 +20,23 @@
 
 class CPUInfo {
 public:
-    CPUInfo() : cpuModel(getCPUModel()) {
-        myLOG("CPUInfo: cpu model: 0x%x", cpuModel);
+    CPUInfo() : model(getCPUModel()) {
+        myLOG("CPUInfo: cpu model: 0x%x", model);
     };
     
     ~CPUInfo() {
-        myLOG("~CPUInfo: OK!");
+        myLOG("~CPUInfo(): OK!");
     }
     
     /**
      * Intel CPU models
      */
-    uint8_t cpuModel;
+    uint8_t model;
     
     /**
      *  Get current CPU model.
      *
-     * @return detected CPU model
+     *  @return detected CPU model
      */
     uint8_t getCPUModel(void) const;
     

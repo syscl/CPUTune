@@ -211,4 +211,16 @@ static const char kextVersion[] {
     getBuildMonth<0>(), getBuildMonth<1>(), '-', getBuildDay<0>(), getBuildDay<1>(), '\0'
 };
 
+/**
+ *  Reads file data at path with given length
+ *
+ *  @param path full file path
+ *  @param off offset of a file
+ *  @param bytes bytes read
+ *
+ *  @return allocated buffer on success or nullptr on error
+ */
+EXPORT uint8_t *readFileNBytes(const char* path, off_t off, size_t bytes);
+
+
 #endif /* kern_util_hpp */
