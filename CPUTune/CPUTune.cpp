@@ -88,7 +88,7 @@ bool CPUTune::start(IOService *provider)
     
     initKextPerferences();
     
-    // let's turn off some off the SIP bits so that we can debug it easily on a real mac
+    // let's turn off some of the SIP bits so that we can debug it easily on a real mac
     if (allowUnrestrictedFS) {
         sip_tune->allowUnrestrictedFS();
     }
@@ -120,7 +120,7 @@ bool CPUTune::start(IOService *provider)
     
     // check if we need to enable Intel Speed Shift on platform on Skylake+
     if (supportedSpeedShift) {
-        if (enableIntelSpeedShift) {
+        if (!hwpEnableOnceSet && enableIntelSpeedShift) {
             // Note this bit can only be enabled once from the default value.
             // Once set, writes to the HWP_ENABLE bit are ignored. Only RESET
             // will clear this bit. Default = zero (0).
