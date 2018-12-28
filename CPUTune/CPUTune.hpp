@@ -46,8 +46,6 @@ private:
     IOWorkLoop *myWorkLoop;
     IOTimerEventSource *timerSource;
     void readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender);
-    bool logTurboBoostConfMissing = false;
-    bool logSpeedShiftConfMissing = false;
     
     
     void enableTurboBoost(void);

@@ -13,7 +13,7 @@ An open source kernel extension enables dynamic CPU performance tuning at runtim
 - Add `-cputoff` to disable CPUTune
 - Add `-cputbeta` to enable CPUTune on unsupported os versions (10.14 and below are enabled by default).
 
-### Configuration
+#### Configuration
 - In terminal, type in ```echo "1">/tmp/CPUTuneTurboBoostRT.conf``` to enable turbo boost when CPUTune is loaded
 - In terminal, type in ```echo "0">/tmp/CPUTuneTurboBoostRT.conf``` to disable turbo boost when needed
 - In case you want a simplify command to switch turbo boost, change the `TurboBoostAtRuntime` in `CPUTune.kext/Contents/Info.plist`

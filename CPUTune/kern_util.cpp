@@ -15,7 +15,7 @@ uint32_t ADDPR(debugPrintDelay) = 0;
 
 long logFileOffset = 0L;
 
-int writeBufferToFile(const char *path, char *buffer) {
+errno_t writeBufferToFile(const char *path, char *buffer) {
     errno_t err = 0;
     int length = static_cast<int>(strlen(buffer));
     vnode_t vp = NULLVP;

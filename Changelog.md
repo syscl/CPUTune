@@ -1,5 +1,10 @@
 CPUTune Changelog
 =======================
+### v1.8.4
+
+- Removed unused variables
+- Corrected  ```writeBufferToFile()``` return type
+
 ### v1.8.1
 - Regularly checks profiles
 
