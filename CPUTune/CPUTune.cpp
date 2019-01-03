@@ -264,7 +264,7 @@ void CPUTune::stop(IOService *provider)
         myLOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", cur_MSR_IA32_PERF_CTL, org_MSR_IA32_PERF_CTL);
         wrmsr64(MSR_IA32_PERF_CTL, org_MSR_IA32_PERF_CTL);
     }
-    if (cpu_info->model >= cpu_info->CPU_MODEL_SKYLAKE) {
+    if (supportedSpeedShift) {
         auto cur_MSR_IA32_PM_ENABLE = rdmsr64(MSR_IA32_PM_ENABLE);
         if (cur_MSR_IA32_PM_ENABLE != org_MSR_IA32_PM_ENABLE) {
             myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", cur_MSR_IA32_PM_ENABLE, org_MSR_IA32_PM_ENABLE);

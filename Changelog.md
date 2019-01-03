@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v.1.8.5
+
+- Simplify the enable if-condition
+
 ### v1.8.4
 
 - Removed unused variables
