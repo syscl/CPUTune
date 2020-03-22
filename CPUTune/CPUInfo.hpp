@@ -41,11 +41,13 @@ public:
     uint8_t getCPUModel(void) const;
     
     /**
-     *  Intel CPU models as returned by CPUID
-     *  The list is synchronised and updated with XNU source code (osfmk/i386/cpuid.h).
-     *  Last update: xnu-4570.41.2
-     *  Some details could be found on http://instlatx64.atw.hu and https://en.wikichip.org/wiki/64-bit_architecture#x86
-     */
+    *  Intel CPU models as returned by CPUID
+    *  The list is synchronised and updated with XNU source code (osfmk/i386/cpuid.h).
+    *  Names are altered to avoid conflicts just in case.
+    *  Last update: xnu-4903.221.2
+    *  Some details could be found on http://instlatx64.atw.hu and https://en.wikichip.org/wiki/64-bit_architecture#x86
+    *  Also: https://www.intel.com/content/dam/www/public/us/en/documents/sa00115-microcode-update-guidance.pdf
+    */
     enum CpuModel {
         CPU_MODEL_UNKNOWN        =  0x00,
         CPU_MODEL_PENRYN         =  0x17,
@@ -77,12 +79,12 @@ public:
         CPU_MODEL_KABYLAKE_ULT   =  0x8E,
         CPU_MODEL_KABYLAKE_ULX   =  0x8E,
         CPU_MODEL_KABYLAKE_DT    =  0x9E,
-        CPU_MODEL_COFFEELAKE     =  0x9E,
-        CPU_MODEL_COFFEELAKE_ULT =  0x9E,
-        CPU_MODEL_COFFEELAKE_ULX =  0x9E,
-        CPU_MODEL_COFFEELAKE_DT  =  0x9E,
+        CPU_MODEL_COMETLAKE_S    =  0x9F, /* desktop Comet Lake */
         CPU_MODEL_CANNONLAKE     =  0x66,
-        CPU_MODEL_ICELAKE        =  0x7E
+        CPU_MODEL_ICELAKE_Y      =  0x7D,
+        CPU_MODEL_ICELAKE_U      =  0x7E,
+        CPU_MODEL_COMETLAKE_Y    =  0xA5, /* aka 10th generation Amber Lake Y */
+        CPU_MODEL_COMETLAKE_U    =  0xA6,
     };
 };
 

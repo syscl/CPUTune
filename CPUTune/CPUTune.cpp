@@ -10,6 +10,7 @@
 #include <CPUInfo.hpp>
 #include <SIPTune.hpp>
 #include <kern_util.hpp>
+#include <NVRAMUtils.hpp>
 #include <IOKit/IOTimerEventSource.h>
 
 OSDefineMetaClassAndStructors(CPUTune, IOService)
@@ -23,10 +24,20 @@ IOService *CPUTune::probe(IOService *provider, SInt32 *score) {
 
 bool CPUTune::init(OSDictionary *dict)
 {
+    NVRAMUtils nvram = NVRAMUtils();
+    if (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta)) {
+        myLOG("Unsupported kernel version: %d, get a CPUTune that support current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
+        nvram.setKextPanicKey();
+        return false;
+    } else if (nvram.isKextPanicLastBoot()) {
+        // clear the panic key
+        myLOG("Found % key being set in NVRAM, CPUTune (%s) supportted kernel version %d, clear the panic key", kCPUTUNE_PANIC_KEY, kextVersion, getKernelVersion());
+        nvram.clearKextPanicKey();
+    }
+    
     auto isDisabled = checkKernelArgument("-s") |
                       checkKernelArgument("-x") |
-                      checkKernelArgument(bootargOff) |
-                      (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta));
+                      checkKernelArgument(bootargOff);
     if (isDisabled) {
         myLOG("init: not allow to run.");
         return false;
@@ -201,12 +212,6 @@ void CPUTune::enableTurboBoost()
 
 void CPUTune::disableTurboBoost()
 {
-//    uint64_t val = org_MSR_IA32_PERF_CTL;
-//    myLOG("disableTurboBoost: get MSR_IA32_PERF_CTL value: 0x%llx", val);
-//     flip bit 32 to 1
-//    val &= ((uint64_t)1) << 32;
-//    myLOG("disableTurboBoost: set MSR_IA32_PERF_CTL value: 0x%llx", val);
-//    wrmsr64(MSR_IA32_PERF_CTL, val);
     const uint64_t cur = rdmsr64(MSR_IA32_MISC_ENABLE);
     // flip bit 38 to 1
     const uint64_t val = cur | kDisableTurboBoostBits;

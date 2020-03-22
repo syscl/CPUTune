@@ -16,6 +16,8 @@
 		E819949A21A90DC00019C605 /* CPUInfo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E819949821A90DC00019C605 /* CPUInfo.hpp */; };
 		E81A35CC21AA78C100A101FD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E81A35CB21AA78C100A101FD /* README.md */; };
 		E81A35CE21AA7B6F00A101FD /* Changelog.md in Resources */ = {isa = PBXBuildFile; fileRef = E81A35CD21AA7B6F00A101FD /* Changelog.md */; };
+		E827227A24276A2A0006E161 /* NVRAMUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E827227824276A2A0006E161 /* NVRAMUtils.cpp */; };
+		E827227B24276A2A0006E161 /* NVRAMUtils.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E827227924276A2A0006E161 /* NVRAMUtils.hpp */; };
 		E8D5861821A7BB1C001CCF6A /* CPUTune.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E8D5861721A7BB1C001CCF6A /* CPUTune.hpp */; };
 		E8D5861A21A7BB1C001CCF6A /* CPUTune.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8D5861921A7BB1C001CCF6A /* CPUTune.cpp */; };
 /* End PBXBuildFile section */
@@ -30,6 +32,8 @@
 		E819949821A90DC00019C605 /* CPUInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInfo.hpp; sourceTree = "<group>"; };
 		E81A35CB21AA78C100A101FD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		E81A35CD21AA7B6F00A101FD /* Changelog.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Changelog.md; sourceTree = SOURCE_ROOT; };
+		E827227824276A2A0006E161 /* NVRAMUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NVRAMUtils.cpp; sourceTree = "<group>"; };
+		E827227924276A2A0006E161 /* NVRAMUtils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NVRAMUtils.hpp; sourceTree = "<group>"; };
 		E8D5861421A7BB1C001CCF6A /* CPUTune.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTune.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D5861721A7BB1C001CCF6A /* CPUTune.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUTune.hpp; sourceTree = "<group>"; };
 		E8D5861921A7BB1C001CCF6A /* CPUTune.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUTune.cpp; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 				E80B7FCB21AB278B00B8793B /* csr.h */,
 				E811BF7021AB1B44001BFDC2 /* SIPTune.hpp */,
 				E811BF6F21AB1B44001BFDC2 /* SIPTune.cpp */,
+				E827227824276A2A0006E161 /* NVRAMUtils.cpp */,
+				E827227924276A2A0006E161 /* NVRAMUtils.hpp */,
 				E806014621A7D22600B4E214 /* kern_util.hpp */,
 				E806014521A7D22600B4E214 /* kern_util.cpp */,
 				E8D5861B21A7BB1C001CCF6A /* Info.plist */,
@@ -102,6 +108,7 @@
 				E8D5861821A7BB1C001CCF6A /* CPUTune.hpp in Headers */,
 				E80B7FCC21AB278B00B8793B /* csr.h in Headers */,
 				E819949A21A90DC00019C605 /* CPUInfo.hpp in Headers */,
+				E827227B24276A2A0006E161 /* NVRAMUtils.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,7 +139,7 @@
 		E8D5860B21A7BB1C001CCF6A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = syscl;
 				TargetAttributes = {
 					E8D5861321A7BB1C001CCF6A = {
@@ -177,6 +184,7 @@
 			files = (
 				E811BF7121AB1B44001BFDC2 /* SIPTune.cpp in Sources */,
 				E8D5861A21A7BB1C001CCF6A /* CPUTune.cpp in Sources */,
+				E827227A24276A2A0006E161 /* NVRAMUtils.cpp in Sources */,
 				E806014721A7D22600B4E214 /* kern_util.cpp in Sources */,
 				E819949921A90DC00019C605 /* CPUInfo.cpp in Sources */,
 			);
@@ -299,6 +307,7 @@
 		E8D5861F21A7BB1C001CCF6A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
@@ -315,6 +324,7 @@
 		E8D5862021A7BB1C001CCF6A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;

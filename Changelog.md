@@ -1,5 +1,25 @@
 CPUTune Changelog
 =======================
+### v1.9.0
+
+- Resolve linkage issue for kernel major/minor
+
+### v1.8.9
+
+- NVRAM protection
+
+### v1.8.8
+
+- Supported macOS Catalina
+
+### v1.8.7
+
+- Updated cpu info to ```xnu-4903.221.2```
+
+### v1.8.6
+
+- Updated csr header to ```xnu-4903.221.2```
+
 ### v.1.8.5
 
 - Simplify the enable if-condition

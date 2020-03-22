@@ -9,6 +9,7 @@
 #define kern_util_hpp
 
 #include <IOKit/IOLib.h>
+#include <libkern/version.h>
 
 #define xStringify(a) Stringify(a)
 #define Stringify(a) #a
@@ -72,16 +73,6 @@ extern uint32_t ADDPR(debugPrintDelay);
 EXPORT extern "C" void cputune_os_log(const char *format, ...);
 
 /**
- *  Kernel version major
- */
-extern const int version_major;
-
-/**
- *  Kernel version minor
- */
-extern const int version_minor;
-
-/**
  *  Possible boot arguments
  */
 static constexpr const char *bootargOff  {"-cputoff"};          // Disable the kext
@@ -100,6 +91,7 @@ enum KernelVersion {
     Sierra        = 16,
     HighSierra    = 17,
     Mojave        = 18,
+    Catalina      = 19,
     Unsupported
 };
 
