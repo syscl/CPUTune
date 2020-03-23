@@ -26,7 +26,7 @@ bool CPUTune::init(OSDictionary *dict)
 {
     NVRAMUtils nvram = NVRAMUtils();
     if (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta)) {
-        myLOG("Unsupported kernel version: %d, get a CPUTune that support current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
+        myLOG("Unsupported kernel version: %d, get a CPUTune that supports current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
         nvram.setKextPanicKey();
         return false;
     } else if (nvram.isKextPanicLastBoot()) {
