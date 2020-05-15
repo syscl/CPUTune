@@ -265,7 +265,7 @@ void CPUTune::disableProcHot()
 {
     const uint64_t cur = rdmsr64(0x1FC);
     
-    myLOG("disableProcHot: orig value: 0x%llx to 0x11x", cur, cur & 0xFFFFFFFE);
+    myLOG("disableProcHot: orig value: 0x%llx to 0x%11x", cur, cur & 0xFFFFFFFE);
     wrmsr64(0x1FC, rdmsr64(0x1FC) & 0xFFFFFFFE);
 }
 
@@ -273,7 +273,7 @@ void CPUTune::enableProcHot()
 {
     const uint64_t cur = rdmsr64(0x1FC);
     
-    myLOG("enableProcHot: orig value: 0x%llx to 0x11x", cur, cur | 0x1);
+    myLOG("enableProcHot: orig value: 0x%llx to 0x%11x", cur, cur | 0x1);
     wrmsr64(0x1FC, rdmsr64(0x1FC) | 0x1);
 }
 
