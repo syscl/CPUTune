@@ -36,9 +36,13 @@
 			<string>/tmp/CPUTuneSpeedShiftRT.conf</string>
 			<key>TurboBoostAtRuntime</key>
 			<string>/tmp/CPUTuneTurboBoostRT.conf</string>
+			<key>ProcHotAtRuntime</key>
+			<string>/tmp/CPUTuneProcHotRT.conf</string>
 			<key>EnableSpeedShift</key>
 			<true/>
 			<key>EnableTurboBoost</key>
+			<false/>
+			<key>EnableProcHot</key>
 			<false/>
 			<key>AllowUnrestrictedFS</key>
 			<false/>

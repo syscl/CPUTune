@@ -74,8 +74,17 @@ void CPUTune::initKextPerferences()
     OSBoolean *keyEnableSpeedShift = OSDynamicCast(OSBoolean, getProperty("EnableSpeedShift"));
     OSBoolean *keyAllowUnrestrictedFS = OSDynamicCast(OSBoolean, getProperty("AllowUnrestrictedFS"));
     
+    OSString *keyProcHotAtRuntime = OSDynamicCast(OSString, getProperty("ProcHotAtRuntime"));
+    OSBoolean *keyEnableProcHot = OSDynamicCast(OSBoolean,
+        getProperty("EnableProcHot"));
+    
     if (keyTurboBoostAtRuntime != nullptr) {
         turboBoostPath = const_cast<const char *>(keyTurboBoostAtRuntime->getCStringNoCopy());
+    }
+    
+    if (keyProcHotAtRuntime != nullptr) {
+        ProcHotPath = const_cast<const char
+            *>(keyProcHotAtRuntime->getCStringNoCopy());
     }
     
     if (keySpeedShiftAtRuntime != nullptr) {
@@ -83,6 +92,7 @@ void CPUTune::initKextPerferences()
     }
 
     enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
+    enableIntelProcHot = keyEnableProcHot && keyEnableProcHot->isTrue();
     supportedSpeedShift = cpu_info->model >= cpu_info->CPU_MODEL_SKYLAKE;
     enableIntelSpeedShift = keyEnableSpeedShift && keyEnableSpeedShift->isTrue();
     
@@ -128,6 +138,12 @@ bool CPUTune::start(IOService *provider)
     } else {
         disableTurboBoost();
     }
+
+    if (enableIntelProcHot) {
+        enableProcHot();
+    } else {
+        disableProcHot();
+    }
     
     // check if we need to enable Intel Speed Shift on platform on Skylake+
     if (supportedSpeedShift) {
@@ -169,9 +185,30 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             myLOG("readConfigAtRuntime: %s Intel Turbo Boost", curr ? "enable" : "disable");
             if (curr) {
                 enableTurboBoost();
+
             } else {
                 disableTurboBoost();
+
             }
+        }
+    }
+
+    if (ProcHotPath) {
+        bool prev = rdmsr64(0x1FC) & 0x1;
+        size_t bytes = 1;
+        uint8_t *buffer = readFileNBytes(ProcHotPath, 0, bytes);
+        //check if currently request enable ProcHot
+        bool curr = buffer && (*buffer == '1');
+        //deallocate the buffer
+        deleter(buffer);
+        if (curr != prev) {
+            myLOG("readConfigAtRunTime: %s Intel Proc Hot", curr ? "enable" : "disable");
+            if (curr) {
+                enableProcHot();
+            } else {
+                disableProcHot();
+            }
+                
         }
     }
     
@@ -222,6 +259,22 @@ void CPUTune::disableTurboBoost()
         myLOG("disableTurboBoost: set MSR_IA32_MISC_ENABLE to 0x%llx", val);
         wrmsr64(MSR_IA32_MISC_ENABLE, val);
     }
+}
+
+void CPUTune::disableProcHot()
+{
+    const uint64_t cur = rdmsr64(0x1FC);
+    
+    myLOG("disableProcHot: orig value: 0x%llx to 0x11x", cur, cur & 0xFFFFFFFE);
+    wrmsr64(0x1FC, rdmsr64(0x1FC) & 0xFFFFFFFE);
+}
+
+void CPUTune::enableProcHot()
+{
+    const uint64_t cur = rdmsr64(0x1FC);
+    
+    myLOG("enableProcHot: orig value: 0x%llx to 0x11x", cur, cur | 0x1);
+    wrmsr64(0x1FC, rdmsr64(0x1FC) | 0x1);
 }
 
 void CPUTune::enableSpeedShift()
