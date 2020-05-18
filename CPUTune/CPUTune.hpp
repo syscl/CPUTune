@@ -26,8 +26,10 @@ public:
     
 private:
     const char *turboBoostPath = nullptr;
+    const char *ProcHotPath = nullptr;
     const char *speedShiftPath = nullptr;
     bool enableIntelTurboBoost = true;
+    bool enableIntelProcHot = false;
     bool supportedSpeedShift = false;
     // As 64-ia-32-architectures-software-developer-vol-3b-part-2-manual (Vol. 3B 14-7)
     // Only RESET will clear this bit.
@@ -50,6 +52,9 @@ private:
     
     void enableTurboBoost(void);
     void disableTurboBoost(void);
+    
+    void enableProcHot(void);
+    void disableProcHot(void);
     
     void enableSpeedShift(void);
     void disableSpeedShift(void);
