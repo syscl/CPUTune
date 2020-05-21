@@ -223,11 +223,11 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
 }
 
 bool CPUTune::setIfNotEqual(const uint64_t current, const uint64_t expect, const uint32_t msr) const {
-    bool is_equal = current == expect;
-    if (!is_equal) {
+    const bool needWrite = current != expect;
+    if (needWrite) {
         wrmsr64(msr, expect);
     }
-    return is_equal;
+    return needWrite;
 }
 
 void CPUTune::enableTurboBoost()
@@ -283,7 +283,6 @@ void CPUTune::enableSpeedShift()
 void CPUTune::disableSpeedShift()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_PM_ENABLE);
-//    myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
     if (setIfNotEqual(cur, kDisableSpeedShiftBit, MSR_IA32_PM_ENABLE)) {
         myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", __func__, cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
     } else {

@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v1.9.5
+
+- Fixed the return type of the ```setIfNotEqual()```
+
 ### v1.9.4
 
 - Simplify writing logic to MSR
