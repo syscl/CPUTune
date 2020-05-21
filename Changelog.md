@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v1.9.2
+
+- More accurate logging for non-exist propreties in NVRAM
+
 ### v1.9.1
 
 - Supports ```BD_PROCHOT``` signal on Intel CPU credits @christophe-duc

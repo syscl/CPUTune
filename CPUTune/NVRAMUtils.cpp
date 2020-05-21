@@ -65,7 +65,7 @@ int NVRAMUtils::getProperty(const char *symbol, void *value, size_t *len) const 
     *len = 0;
     OSObject *o = nvram->getProperty(symbol);
     if (o == nullptr) {
-        myLOG("Failed to get NVRAM property: %s", symbol);
+        myLOG("%s not existed in NVRAM property", symbol);
         nvram->release();
         return 0;
     }
