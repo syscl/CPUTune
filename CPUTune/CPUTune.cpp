@@ -222,17 +222,23 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     sender->setTimeoutMS(2000);
 }
 
+bool CPUTune::setIfNotEqual(const uint64_t current, const uint64_t expect, const uint32_t msr) const {
+    bool is_equal = current == expect;
+    if (!is_equal) {
+        wrmsr64(msr, expect);
+    }
+    return is_equal;
+}
+
 void CPUTune::enableTurboBoost()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_MISC_ENABLE);
     // flip bit 38 to 0
     const uint64_t val = cur & kEnableTurboBoostBits;
-    myLOG("enableTurboBoost: get MSR_IA32_MISC_ENABLE value: 0x%llx", cur);
-    if (val == cur) {
-        myLOG("enableTurboBoost: Intel Turbo Boost has already been enabled.");
+    if (setIfNotEqual(cur, val, MSR_IA32_MISC_ENABLE)) {
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", __func__, cur, val, MSR_IA32_MISC_ENABLE);
     } else {
-        myLOG("enableTurboBoost: set MSR_IA32_MISC_ENABLE value: 0x%llx", val);
-        wrmsr64(MSR_IA32_MISC_ENABLE, val);
+        myLOG("%s: 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_MISC_ENABLE);
     }
 }
 
@@ -241,12 +247,10 @@ void CPUTune::disableTurboBoost()
     const uint64_t cur = rdmsr64(MSR_IA32_MISC_ENABLE);
     // flip bit 38 to 1
     const uint64_t val = cur | kDisableTurboBoostBits;
-    myLOG("disableTurboBoost: get MSR_IA32_MISC_ENABLE value: 0x%llx", cur);
-    if (val == cur) {
-        myLOG("disableTurboBoost: Intel Turbo Boost has already been disabled.");
+    if (setIfNotEqual(cur, val, MSR_IA32_MISC_ENABLE)) {
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", __func__, cur, val, MSR_IA32_MISC_ENABLE);
     } else {
-        myLOG("disableTurboBoost: set MSR_IA32_MISC_ENABLE to 0x%llx", val);
-        wrmsr64(MSR_IA32_MISC_ENABLE, val);
+        myLOG("%s: 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_MISC_ENABLE);
     }
 }
 
@@ -268,25 +272,22 @@ void CPUTune::enableProcHot()
 
 void CPUTune::enableSpeedShift()
 {
-    const uint64_t val = rdmsr64(MSR_IA32_PM_ENABLE);
-    myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
-    if (val == kEnableSpeedShiftBit) {
-        myLOG("enableSpeedShift: Intel SpeedShift has already been enabled.");
+    const uint64_t cur = rdmsr64(MSR_IA32_PM_ENABLE);
+    if (setIfNotEqual(cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE)) {
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", __func__, cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
     } else {
-        myLOG("enableSpeedShift: Intel SpeedShift is disabled, turn it on.");
-        wrmsr64(MSR_IA32_PM_ENABLE, kEnableSpeedShiftBit);
+        myLOG("%s: 0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_PM_ENABLE);
     }
 }
 
 void CPUTune::disableSpeedShift()
 {
-    const uint64_t val = rdmsr64(MSR_IA32_PM_ENABLE);
-    myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
-    if (val == kDisableSpeedShiftBit) {
-        myLOG("enableSpeedShift: Intel SpeedShift has already been disabled.");
+    const uint64_t cur = rdmsr64(MSR_IA32_PM_ENABLE);
+//    myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
+    if (setIfNotEqual(cur, kDisableSpeedShiftBit, MSR_IA32_PM_ENABLE)) {
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", __func__, cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
     } else {
-        myLOG("enableSpeedShift: Intel SpeedShift is enabled, turn it off.");
-        wrmsr64(MSR_IA32_PM_ENABLE, kDisableSpeedShiftBit);
+        myLOG("%s: 0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_PM_ENABLE);
     }
 }
 
@@ -300,22 +301,16 @@ void CPUTune::stop(IOService *provider)
         timerSource = 0;
     }
 
-    // restore back the previous MSR_IA32 state
-    const uint64_t cur_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
-    const uint64_t cur_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
-    if (cur_MSR_IA32_MISC_ENABLE != org_MSR_IA32_MISC_ENABLE) {
-        myLOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", cur_MSR_IA32_MISC_ENABLE, org_MSR_IA32_MISC_ENABLE);
-        wrmsr64(MSR_IA32_MISC_ENABLE, org_MSR_IA32_MISC_ENABLE);
+    // restore the previous MSR_IA32 state
+    if (setIfNotEqual(rdmsr64(MSR_IA32_MISC_ENABLE), org_MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE)) {
+        myLOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_MISC_ENABLE), org_MSR_IA32_MISC_ENABLE);
     }
-    if (cur_MSR_IA32_PERF_CTL != org_MSR_IA32_PERF_CTL) {
-        myLOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", cur_MSR_IA32_PERF_CTL, org_MSR_IA32_PERF_CTL);
-        wrmsr64(MSR_IA32_PERF_CTL, org_MSR_IA32_PERF_CTL);
+    if (setIfNotEqual(rdmsr64(MSR_IA32_PERF_CTL), org_MSR_IA32_PERF_CTL, MSR_IA32_PERF_CTL)) {
+        myLOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_PERF_CTL), org_MSR_IA32_PERF_CTL);
     }
     if (supportedSpeedShift) {
-        const uint64_t cur_MSR_IA32_PM_ENABLE = rdmsr64(MSR_IA32_PM_ENABLE);
-        if (cur_MSR_IA32_PM_ENABLE != org_MSR_IA32_PM_ENABLE) {
-            myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", cur_MSR_IA32_PM_ENABLE, org_MSR_IA32_PM_ENABLE);
-            wrmsr64(MSR_IA32_PM_ENABLE, org_MSR_IA32_PM_ENABLE);
+        if (setIfNotEqual(rdmsr64(MSR_IA32_PM_ENABLE), org_MSR_IA32_PM_ENABLE, MSR_IA32_PM_ENABLE)) {
+            myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_PM_ENABLE), org_MSR_IA32_PM_ENABLE);
         }
     }
     super::stop(provider);

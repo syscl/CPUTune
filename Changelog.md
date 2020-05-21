@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v1.9.4
+
+- Simplify writing logic to MSR
+
 ### v1.9.3
 - Avoid dynamic allocation for CPUInfo and SIPTune, which avoid indefine blocking in kernel space + avoid memory leak
 - Use type anotation

@@ -59,6 +59,8 @@ private:
     void enableSpeedShift(void);
     void disableSpeedShift(void);
     
+    bool setIfNotEqual(const uint64_t, const uint64_t, const uint32_t) const;
+    
     CPUInfo cpu_info;
     
     SIPTune sip_tune;

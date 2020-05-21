@@ -24,10 +24,6 @@ public:
         myLOG("CPUInfo: cpu model: 0x%x", model);
     };
     
-    ~CPUInfo() {
-        myLOG("~CPUInfo(): OK!");
-    }
-    
     /**
      * Intel CPU models
      */
