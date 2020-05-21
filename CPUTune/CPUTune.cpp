@@ -18,7 +18,7 @@ OSDefineMetaClassAndStructors(CPUTune, IOService)
 IOService *CPUTune::probe(IOService *provider, SInt32 *score) {
     setProperty("VersionInfo", kextVersion);
     setProperty("Author", "syscl");
-    auto service = IOService::probe(provider, score);
+    IOService* service = IOService::probe(provider, score);
     return service;
 }
 
@@ -35,7 +35,7 @@ bool CPUTune::init(OSDictionary *dict)
         nvram.clearKextPanicKey();
     }
     
-    auto isDisabled = checkKernelArgument("-s") |
+    bool isDisabled = checkKernelArgument("-s") |
                       checkKernelArgument("-x") |
                       checkKernelArgument(bootargOff);
     if (isDisabled) {
@@ -47,17 +47,8 @@ bool CPUTune::init(OSDictionary *dict)
         myLOG("init: failed!");
         return ret;
     }
-    cpu_info = new CPUInfo();
-    if (cpu_info == nullptr) {
-        myLOG("init: cannot allocate class CPUInfo.");
-        return false;
-    }
-    
-    sip_tune = new SIPTune();
-    if (sip_tune == nullptr) {
-        myLOG("init: cannot allocate class SIPTune.");
-        return false;
-    }
+    cpu_info = CPUInfo();
+    sip_tune = SIPTune();
     
     myLOG("init: successed!");
     
@@ -75,16 +66,14 @@ void CPUTune::initKextPerferences()
     OSBoolean *keyAllowUnrestrictedFS = OSDynamicCast(OSBoolean, getProperty("AllowUnrestrictedFS"));
     
     OSString *keyProcHotAtRuntime = OSDynamicCast(OSString, getProperty("ProcHotAtRuntime"));
-    OSBoolean *keyEnableProcHot = OSDynamicCast(OSBoolean,
-        getProperty("EnableProcHot"));
+    OSBoolean *keyEnableProcHot = OSDynamicCast(OSBoolean, getProperty("EnableProcHot"));
     
     if (keyTurboBoostAtRuntime != nullptr) {
         turboBoostPath = const_cast<const char *>(keyTurboBoostAtRuntime->getCStringNoCopy());
     }
     
     if (keyProcHotAtRuntime != nullptr) {
-        ProcHotPath = const_cast<const char
-            *>(keyProcHotAtRuntime->getCStringNoCopy());
+        ProcHotPath = const_cast<const char *>(keyProcHotAtRuntime->getCStringNoCopy());
     }
     
     if (keySpeedShiftAtRuntime != nullptr) {
@@ -93,7 +82,7 @@ void CPUTune::initKextPerferences()
 
     enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
     enableIntelProcHot = keyEnableProcHot && keyEnableProcHot->isTrue();
-    supportedSpeedShift = cpu_info->model >= cpu_info->CPU_MODEL_SKYLAKE;
+    supportedSpeedShift = cpu_info.model >= cpu_info.CPU_MODEL_SKYLAKE;
     enableIntelSpeedShift = keyEnableSpeedShift && keyEnableSpeedShift->isTrue();
     
     allowUnrestrictedFS = keyAllowUnrestrictedFS && keyAllowUnrestrictedFS->isTrue();
@@ -111,7 +100,7 @@ bool CPUTune::start(IOService *provider)
     
     // let's turn off some of the SIP bits so that we can debug it easily on a real mac
     if (allowUnrestrictedFS) {
-        sip_tune->allowUnrestrictedFS();
+        sip_tune.allowUnrestrictedFS();
     }
     
     // set up time event
@@ -155,7 +144,7 @@ bool CPUTune::start(IOService *provider)
             hwpEnableOnceSet = true;
         } 
     } else {
-        myLOG("start: cpu model (0x%x) does not support Intel SpeedShift.", cpu_info->model);
+        myLOG("start: cpu model (0x%x) does not support Intel SpeedShift.", cpu_info.model);
     }
     
     myLOG("start: registerService");
@@ -279,7 +268,7 @@ void CPUTune::enableProcHot()
 
 void CPUTune::enableSpeedShift()
 {
-    auto val = rdmsr64(MSR_IA32_PM_ENABLE);
+    const uint64_t val = rdmsr64(MSR_IA32_PM_ENABLE);
     myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
     if (val == kEnableSpeedShiftBit) {
         myLOG("enableSpeedShift: Intel SpeedShift has already been enabled.");
@@ -291,7 +280,7 @@ void CPUTune::enableSpeedShift()
 
 void CPUTune::disableSpeedShift()
 {
-    auto val = rdmsr64(MSR_IA32_PM_ENABLE);
+    const uint64_t val = rdmsr64(MSR_IA32_PM_ENABLE);
     myLOG("enableSpeedShift: get MSR_IA32_PM_ENABLE value: 0x%llx", val);
     if (val == kDisableSpeedShiftBit) {
         myLOG("enableSpeedShift: Intel SpeedShift has already been disabled.");
@@ -312,8 +301,8 @@ void CPUTune::stop(IOService *provider)
     }
 
     // restore back the previous MSR_IA32 state
-    auto cur_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
-    auto cur_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
+    const uint64_t cur_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
+    const uint64_t cur_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
     if (cur_MSR_IA32_MISC_ENABLE != org_MSR_IA32_MISC_ENABLE) {
         myLOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", cur_MSR_IA32_MISC_ENABLE, org_MSR_IA32_MISC_ENABLE);
         wrmsr64(MSR_IA32_MISC_ENABLE, org_MSR_IA32_MISC_ENABLE);
@@ -323,7 +312,7 @@ void CPUTune::stop(IOService *provider)
         wrmsr64(MSR_IA32_PERF_CTL, org_MSR_IA32_PERF_CTL);
     }
     if (supportedSpeedShift) {
-        auto cur_MSR_IA32_PM_ENABLE = rdmsr64(MSR_IA32_PM_ENABLE);
+        const uint64_t cur_MSR_IA32_PM_ENABLE = rdmsr64(MSR_IA32_PM_ENABLE);
         if (cur_MSR_IA32_PM_ENABLE != org_MSR_IA32_PM_ENABLE) {
             myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", cur_MSR_IA32_PM_ENABLE, org_MSR_IA32_PM_ENABLE);
             wrmsr64(MSR_IA32_PM_ENABLE, org_MSR_IA32_PM_ENABLE);
@@ -334,7 +323,5 @@ void CPUTune::stop(IOService *provider)
 
 void CPUTune::free(void)
 {
-    deleter(cpu_info);
-    deleter(sip_tune);
     super::free();
 }

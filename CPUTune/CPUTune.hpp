@@ -59,9 +59,10 @@ private:
     void enableSpeedShift(void);
     void disableSpeedShift(void);
     
-    CPUInfo *cpu_info {nullptr};
+    CPUInfo cpu_info;
     
-    SIPTune *sip_tune {nullptr};
+    SIPTune sip_tune;
+    
     bool allowUnrestrictedFS = false;
     
     uint64_t org_MSR_IA32_MISC_ENABLE;

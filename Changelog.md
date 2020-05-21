@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v1.9.3
+- Avoid dynamic allocation for CPUInfo and SIPTune, which avoid indefine blocking in kernel space + avoid memory leak
+- Use type anotation
+
 ### v1.9.2
 
 - More accurate logging for non-exist propreties in NVRAM
