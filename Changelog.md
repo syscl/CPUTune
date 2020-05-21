@@ -1,5 +1,10 @@
 CPUTune Changelog
 =======================
+### v1.9.1
+
+- Supports ```BD_PROCHOT``` signal on Intel CPU credits @christophe-duc
+- Update README.md
+
 ### v1.9.0
 
 - Resolve linkage issue for kernel major/minor

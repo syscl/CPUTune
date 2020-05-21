@@ -6,13 +6,13 @@ An open source kernel extension enables dynamic CPU performance tuning at runtim
 #### Features
 - Allows turning on or off Intel Turbo Boost for better battery life
 - Allows turning on or off Intel Speed Shift for maximum performance
-- Allows turning on or off Intel Proc Hot for running without a battery. Please note that this is NOT recommended and can seriously damage your mac. Do at your own risk.
+- Allows turning on or off Intel Proc Hot (```BD_PROCHOT```) for running without a battery. Please note that this is NOT recommended and can seriously damage your mac. Do at your own risk.
 - Implements TimerEvent-based responses for dynamical switching Turbo Boost and Speed Shift at runtime
 - Allows System Integrity Protection (SIP) control a bit easier via Info.plist setting 
 
 #### Boot arguments
 - Add `-cputoff` to disable CPUTune
-- Add `-cputbeta` to enable CPUTune on unsupported os versions (10.14 and below are enabled by default).
+- Add `-cputbeta` to enable CPUTune on unsupported os versions (10.15 and below are enabled by default).
 
 #### Configuration
 - In terminal, type in ```echo "1">/tmp/CPUTuneTurboBoostRT.conf``` to enable turbo boost when CPUTune is loaded
