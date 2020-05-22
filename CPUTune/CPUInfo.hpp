@@ -18,6 +18,9 @@
 // Intel SpeedShift MSRs
 #define MSR_IA32_PM_ENABLE          0x770
 
+//Intel Power MSRs
+#define MSR_IA32_POWER_CTL          0x1FC
+
 class CPUInfo {
 public:
     CPUInfo() : model(getCPUModel()) {

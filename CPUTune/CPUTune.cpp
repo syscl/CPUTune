@@ -54,6 +54,8 @@ bool CPUTune::init(OSDictionary *dict)
     
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
+    org_MSR_IA32_POWER_CTL = rdmsr64(MSR_IA32_POWER_CTL);
+    
     return ret;
 }
 
@@ -128,10 +130,13 @@ bool CPUTune::start(IOService *provider)
         disableTurboBoost();
     }
 
+    //make sure we disable ProcHot only if turboboost is disabled
     if (enableIntelProcHot) {
         enableProcHot();
-    } else {
+    } else if(!enableIntelTurboBoost){
         disableProcHot();
+    } else {
+        myLOG("start: cannot deactivate PROCHOT while turboboost is active!");
     }
     
     // check if we need to enable Intel Speed Shift on platform on Skylake+
@@ -183,7 +188,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     }
 
     if (ProcHotPath) {
-        bool prev = rdmsr64(0x1FC) & 0x1;
+        bool prev = rdmsr64(MSR_IA32_POWER_CTL) & kEnableProcHotBit;
         size_t bytes = 1;
         uint8_t *buffer = readFileNBytes(ProcHotPath, 0, bytes);
         //check if currently request enable ProcHot
@@ -194,8 +199,10 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             myLOG("readConfigAtRunTime: %s Intel Proc Hot", curr ? "enable" : "disable");
             if (curr) {
                 enableProcHot();
-            } else {
+            } else if(!(rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits)){
                 disableProcHot();
+            } else {
+                myLOG("readConfigAtRuntime: Cannot disable PROCHOT while turboboost is active!");
             }
                 
         }
@@ -256,18 +263,18 @@ void CPUTune::disableTurboBoost()
 
 void CPUTune::disableProcHot()
 {
-    const uint64_t cur = rdmsr64(0x1FC);
+    const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     
-    myLOG("disableProcHot: orig value: 0x%llx to 0x%llx", cur, cur & 0xFFFFFFFE);
-    wrmsr64(0x1FC, rdmsr64(0x1FC) & 0xFFFFFFFE);
+    myLOG("disableProcHot: orig value: 0x%llx to 0x%llx", cur, cur & kDisableProcHotBit);
+    wrmsr64(MSR_IA32_POWER_CTL, cur & kDisableProcHotBit);
 }
 
 void CPUTune::enableProcHot()
 {
-    const uint64_t cur = rdmsr64(0x1FC);
+    const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     
-    myLOG("enableProcHot: orig value: 0x%llx to 0x%llx", cur, cur | 0x1);
-    wrmsr64(0x1FC, rdmsr64(0x1FC) | 0x1);
+    myLOG("enableProcHot: orig value: 0x%llx to 0x%llx", cur, cur | kEnableProcHotBit);
+    wrmsr64(MSR_IA32_POWER_CTL, cur | kEnableProcHotBit);
 }
 
 void CPUTune::enableSpeedShift()
@@ -301,6 +308,9 @@ void CPUTune::stop(IOService *provider)
     }
 
     // restore the previous MSR_IA32 state
+    if (setIfNotEqual(rdmsr64(MSR_IA32_POWER_CTL), org_MSR_IA32_POWER_CTL,MSR_IA32_POWER_CTL)) {
+        myLOG("stop: restore MSR_IA32_POWER_CTK from 0x%llx to 0x%llx",rdmsr64(MSR_IA32_POWER_CTL), org_MSR_IA32_POWER_CTL);
+    }
     if (setIfNotEqual(rdmsr64(MSR_IA32_MISC_ENABLE), org_MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE)) {
         myLOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_MISC_ENABLE), org_MSR_IA32_MISC_ENABLE);
     }
