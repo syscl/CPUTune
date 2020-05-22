@@ -265,7 +265,7 @@ void CPUTune::disableProcHot()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     
-    myLOG("disableProcHot: orig value: 0x%llx to 0x%llx", cur, cur & kDisableProcHotBit);
+    myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__,cur, cur & kDisableProcHotBit, MSR_IA32_POWER_CTL);
     wrmsr64(MSR_IA32_POWER_CTL, cur & kDisableProcHotBit);
 }
 
@@ -273,7 +273,7 @@ void CPUTune::enableProcHot()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     
-    myLOG("enableProcHot: orig value: 0x%llx to 0x%llx", cur, cur | kEnableProcHotBit);
+    myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__, cur, cur | kEnableProcHotBit, MSR_IA32_POWER_CTL);
     wrmsr64(MSR_IA32_POWER_CTL, cur | kEnableProcHotBit);
 }
 
