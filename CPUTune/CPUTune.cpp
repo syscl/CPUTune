@@ -265,16 +265,24 @@ void CPUTune::disableProcHot()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     
-    myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__,cur, cur & kDisableProcHotBit, MSR_IA32_POWER_CTL);
-    wrmsr64(MSR_IA32_POWER_CTL, cur & kDisableProcHotBit);
+    const uint64_t val = cur & kDisableProcHotBit;
+    if (setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__,cur, cur & kDisableProcHotBit, MSR_IA32_POWER_CTL);
+    } else {
+        myLOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
+    }
 }
 
 void CPUTune::enableProcHot()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     
-    myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__, cur, cur | kEnableProcHotBit, MSR_IA32_POWER_CTL);
-    wrmsr64(MSR_IA32_POWER_CTL, cur | kEnableProcHotBit);
+    const uint64_t val = cur | kEnableProcHotBit;
+    if(setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__, cur, cur | kEnableProcHotBit, MSR_IA32_POWER_CTL);
+    } else {
+        myLOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
+    }
 }
 
 void CPUTune::enableSpeedShift()
