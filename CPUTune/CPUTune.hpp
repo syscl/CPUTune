@@ -44,6 +44,9 @@ private:
     static constexpr uint64_t kEnableSpeedShiftBit  = 0x1;
     static constexpr uint64_t kDisableSpeedShiftBit = 0;
     
+    static constexpr uint64_t kDisableProcHotBit = 0xFFFFFFFE;
+    static constexpr uint64_t kEnableProcHotBit = 0x1;
+    
     
     IOWorkLoop *myWorkLoop;
     IOTimerEventSource *timerSource;
@@ -69,6 +72,7 @@ private:
     
     uint64_t org_MSR_IA32_MISC_ENABLE;
     uint64_t org_MSR_IA32_PERF_CTL;
+    uint64_t org_MSR_IA32_POWER_CTL;
     
     uint64_t org_MSR_IA32_PM_ENABLE;
     
