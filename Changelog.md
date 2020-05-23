@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v1.9.7
+
+- Remove useless const qualifier + improved code style
+
 ### v1.9.6
 
 - Added init/restore for ```BD_PROCHOT```

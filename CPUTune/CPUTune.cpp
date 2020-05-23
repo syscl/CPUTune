@@ -130,7 +130,7 @@ bool CPUTune::start(IOService *provider)
         disableTurboBoost();
     }
 
-    //make sure we disable ProcHot only if turboboost is disabled
+    // make sure we disable ProcHot only if turboboost is disabled
     if (enableIntelProcHot) {
         enableProcHot();
     } else if(!enableIntelTurboBoost){
@@ -191,9 +191,9 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         bool prev = rdmsr64(MSR_IA32_POWER_CTL) & kEnableProcHotBit;
         size_t bytes = 1;
         uint8_t *buffer = readFileNBytes(ProcHotPath, 0, bytes);
-        //check if currently request enable ProcHot
+        // check if currently request enable ProcHot
         bool curr = buffer && (*buffer == '1');
-        //deallocate the buffer
+        // deallocate the buffer
         deleter(buffer);
         if (curr != prev) {
             myLOG("readConfigAtRunTime: %s Intel Proc Hot", curr ? "enable" : "disable");
@@ -230,7 +230,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
 }
 
 bool CPUTune::setIfNotEqual(const uint64_t current, const uint64_t expect, const uint32_t msr) const {
-    const bool needWrite = current != expect;
+    bool needWrite = current != expect;
     if (needWrite) {
         wrmsr64(msr, expect);
     }
@@ -264,10 +264,9 @@ void CPUTune::disableTurboBoost()
 void CPUTune::disableProcHot()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
-    
     const uint64_t val = cur & kDisableProcHotBit;
     if (setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__,cur, cur & kDisableProcHotBit, MSR_IA32_POWER_CTL);
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__,cur, val, MSR_IA32_POWER_CTL);
     } else {
         myLOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
     }
@@ -276,10 +275,9 @@ void CPUTune::disableProcHot()
 void CPUTune::enableProcHot()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
-    
     const uint64_t val = cur | kEnableProcHotBit;
     if(setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__, cur, cur | kEnableProcHotBit, MSR_IA32_POWER_CTL);
+        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__, cur, val, MSR_IA32_POWER_CTL);
     } else {
         myLOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
     }
