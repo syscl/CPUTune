@@ -1,5 +1,11 @@
 CPUTune Changelog
 =======================
+### v1.9.6
+
+- Added init/restore for ```BD_PROCHOT```
+- Unified the log output for PROCHOT and use ```setIfNotEqual()```
+- Fixed a bug in ```readConfigAtRuntime``` which was not restoring ProcHot correctly when coming out of sleep mode
+
 ### v1.9.5
 
 - Fixed the return type of the ```setIfNotEqual()```
