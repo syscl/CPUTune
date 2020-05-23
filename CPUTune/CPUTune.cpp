@@ -199,7 +199,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             myLOG("readConfigAtRunTime: %s Intel Proc Hot", curr ? "enable" : "disable");
             if (curr) {
                 enableProcHot();
-            } else if(!(rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits)){
+            } else if((rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits) != kEnableTurboBoostBits){
                 disableProcHot();
             } else {
                 myLOG("readConfigAtRuntime: Cannot disable PROCHOT while turboboost is active!");
