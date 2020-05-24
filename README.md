@@ -16,7 +16,7 @@ An open source kernel extension enables dynamic CPU performance tuning at runtim
 - Add `-cputbeta` to enable CPUTune on unsupported os versions (10.15 and below are enabled by default).
 
 #### Configuration
-Open terminal""
+Open terminal:
 - Type in ```echo "1">/tmp/CPUTuneTurboBoostRT.conf``` to enable turbo boost when CPUTune is loaded
 - Type in ```echo "0">/tmp/CPUTuneTurboBoostRT.conf``` to disable turbo boost when needed
 - Type in ```echo <request value> >/tmp/HWPRequest.conf``` to submit persistency hwp request at runtime. For example ```<requet value> = 0x80193008``` 

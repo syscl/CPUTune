@@ -11,6 +11,7 @@
 #include <SIPTune.hpp>
 #include <kern_util.hpp>
 #include <IOKit/IOTimerEventSource.h>
+#include <sys/errno.h>
 
 OSDefineMetaClassAndStructors(CPUTune, IOService)
 
@@ -46,7 +47,7 @@ bool CPUTune::init(OSDictionary *dict)
         return ret;
     }
     
-    myLOG("init: successed!");
+    myLOG("init: succeeded!");
     
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
@@ -216,13 +217,15 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         if (hex) {
             // hex is not NULL means the hwp request config exist
             // let's check if the hex is valid before writing to MSR
-            bool validHex = static_cast<int>(strlen(reinterpret_cast<char*>(hex))) >= 8; // consider the "0x80193008\n"
-            if (validHex) {
-                uint64_t curHwpRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
-                uint64_t hwpRequest = static_cast<uint64_t>(hexToInt(reinterpret_cast<char*>(hex)));
-                if (setIfNotEqual(curHwpRequest, hwpRequest, MSR_IA32_HWP_REQUEST)) {
-                    myLOG("%s: change MSR_IA32_HWP_REQUEST(0x%llx): 0x%llx -> 0x%llx", __func__, MSR_IA32_HWP_REQUEST, curHwpRequest, hwpRequest);
-                }
+            long req = hexToInt(reinterpret_cast<char*>(hex));
+            if (req == ERANGE) {
+                myLOG("%s: HWP Request %s is not a valid hexadecimal at %s", __func__, hex, hwpRequestConfigPath);
+            } else {
+                uint64_t curHWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
+                uint64_t usrHWPRequest = static_cast<uint64_t>(req);
+               if (setIfNotEqual(curHWPRequest, usrHWPRequest, MSR_IA32_HWP_REQUEST)) {
+                   myLOG("%s: change MSR_IA32_HWP_REQUEST(0x%llx): 0x%llx -> 0x%llx", __func__, MSR_IA32_HWP_REQUEST, curHWPRequest, usrHWPRequest);
+               }
             }
         }
     }
