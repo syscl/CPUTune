@@ -214,7 +214,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     if (supportedSpeedShift && hwpRequestConfigPath) {
         uint8_t *hex = readFileNBytes(hwpRequestConfigPath, 0, 10);
         if (hex) {
-            // hex is not NULL means the hwp request config does not exist
+            // hex is not NULL means the hwp request config exist
             // let's check if the hex is valid before writing to MSR
             bool validHex = static_cast<int>(strlen(reinterpret_cast<char*>(hex))) >= 8; // consider the "0x80193008\n"
             if (validHex) {
