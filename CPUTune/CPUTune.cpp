@@ -333,22 +333,26 @@ void CPUTune::stop(IOService *provider)
     }
 
     // restore the previous MSR_IA32 state
-    if (setIfNotEqual(rdmsr64(MSR_IA32_POWER_CTL), org_MSR_IA32_POWER_CTL, MSR_IA32_POWER_CTL)) {
-        myLOG("stop: restore MSR_IA32_POWER_CTK from 0x%llx to 0x%llx",rdmsr64(MSR_IA32_POWER_CTL), org_MSR_IA32_POWER_CTL);
+    const uint64_t cur_ctk = rdmsr64(MSR_IA32_POWER_CTL);
+    if (setIfNotEqual(cur_ctk, org_MSR_IA32_POWER_CTL, MSR_IA32_POWER_CTL)) {
+        myLOG("stop: restore MSR_IA32_POWER_CTK from 0x%llx to 0x%llx", cur_ctk, org_MSR_IA32_POWER_CTL);
     }
-    if (setIfNotEqual(rdmsr64(MSR_IA32_MISC_ENABLE), org_MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE)) {
-        myLOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_MISC_ENABLE), org_MSR_IA32_MISC_ENABLE);
+    const uint64_t cur_misc = rdmsr64(MSR_IA32_MISC_ENABLE);
+    if (setIfNotEqual(cur_misc, org_MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE)) {
+        myLOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", cur_misc, org_MSR_IA32_MISC_ENABLE);
     }
-    if (setIfNotEqual(rdmsr64(MSR_IA32_PERF_CTL), org_MSR_IA32_PERF_CTL, MSR_IA32_PERF_CTL)) {
-        myLOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_PERF_CTL), org_MSR_IA32_PERF_CTL);
+    const uint64_t cur_perf_ctl = rdmsr64(MSR_IA32_PERF_CTL);
+    if (setIfNotEqual(cur_perf_ctl, org_MSR_IA32_PERF_CTL, MSR_IA32_PERF_CTL)) {
+        myLOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", cur_perf_ctl, org_MSR_IA32_PERF_CTL);
     }
     if (supportedSpeedShift) {
-        if (setIfNotEqual(rdmsr64(MSR_IA32_PM_ENABLE), org_MSR_IA32_PM_ENABLE, MSR_IA32_PM_ENABLE)) {
-            myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_PM_ENABLE), org_MSR_IA32_PM_ENABLE);
+        const uint64_t cur_pm_enable = rdmsr64(MSR_IA32_PM_ENABLE);
+        if (setIfNotEqual(cur_pm_enable, org_MSR_IA32_PM_ENABLE, MSR_IA32_PM_ENABLE)) {
+            myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", cur_pm_enable, org_MSR_IA32_PM_ENABLE);
         }
-        
-        if (setIfNotEqual(rdmsr64(MSR_IA32_HWP_REQUEST), org_HWPRequest, MSR_IA32_HWP_REQUEST)) {
-            myLOG("%s: restore MSR_IA32_HWP_REQUEST(0x%llx) to 0x%llx", __func__, org_HWPRequest);
+        const uint64_t cur_hwp_req = rdmsr64(MSR_IA32_HWP_REQUEST);
+        if (setIfNotEqual(cur_hwp_req, org_HWPRequest, MSR_IA32_HWP_REQUEST)) {
+            myLOG("%s: restore MSR_IA32_HWP_REQUEST(0x%llx) from 0x%llx to 0x%llx", __func__, cur_hwp_req, org_HWPRequest);
         }
     }
     super::stop(provider);

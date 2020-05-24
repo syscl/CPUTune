@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v2.0.0
+
+- Major release, fix logging in current value after ```setIfNotEqual()```
+
 ### v1.9.9
 
 - Introduce HWP request at runtime
