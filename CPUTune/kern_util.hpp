@@ -149,7 +149,14 @@ constexpr size_t parseModuleVersion(const char *version) {
 *  @return long integer base 10
 */
 inline long hexToInt(const char *hex) {
-    return strtol(hex, NULL, 0);
+    int base = 16;
+    for (const char *c = hex; *c != '\0'; c++) {
+        if (*c == 'x' || *c== 'X') {
+            base = 0;
+            break;
+        }
+    }
+    return strtol(hex, NULL, base);
 }
 
 /**

@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.0.2
+
+- Support no ```0x/0X``` prefix hexadecimal constant (e.g. 0x800d3008 as 800d3008)
+
 #### v2.0.1
 
 - Verify and surface invalid HWP request properly

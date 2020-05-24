@@ -219,7 +219,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             // let's check if the hex is valid before writing to MSR
             long req = hexToInt(reinterpret_cast<char*>(hex));
             if (req == ERANGE) {
-                myLOG("%s: HWP Request %s is not a valid hexadecimal at %s", __func__, hex, hwpRequestConfigPath);
+                myLOG("%s: HWP Request %s is not a valid hexadecimal constant at %s", __func__, hex, hwpRequestConfigPath);
             } else {
                 uint64_t curHWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
                 uint64_t usrHWPRequest = static_cast<uint64_t>(req);
