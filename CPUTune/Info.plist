@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.9.8</string>
+	<string>1.9.9</string>
 	<key>CFBundleVersion</key>
-	<string>1.9.8</string>
+	<string>1.9.9</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>CPUTune</key>
@@ -38,6 +38,8 @@
 			<string>/tmp/CPUTuneTurboBoostRT.conf</string>
 			<key>ProcHotAtRuntime</key>
 			<string>/tmp/CPUTuneProcHotRT.conf</string>
+			<key>HWPRequestConfigPath</key>
+			<string>/tmp/HWPRequest.conf</string>
 			<key>EnableSpeedShift</key>
 			<true/>
 			<key>EnableTurboBoost</key>

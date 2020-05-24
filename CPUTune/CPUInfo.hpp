@@ -17,6 +17,7 @@
 
 // Intel SpeedShift MSRs
 #define MSR_IA32_PM_ENABLE          0x770
+#define MSR_IA32_HWP_REQUEST        0x774
 
 // Intel Power MSRs
 #define MSR_IA32_POWER_CTL          0x1FC

@@ -29,6 +29,7 @@ private:
     const char *turboBoostPath = nullptr;
     const char *ProcHotPath = nullptr;
     const char *speedShiftPath = nullptr;
+    const char *hwpRequestConfigPath = nullptr;
     bool enableIntelTurboBoost = true;
     bool enableIntelProcHot = false;
     bool supportedSpeedShift = false;
@@ -67,7 +68,7 @@ private:
     
     // As per Apple, don't declare default constructor.
     // The default constuctor CPUTune() will do the following
-    // explicitly: cpu_info = CPUInfo(); ...
+    // implictly: cpu_info(CPUInfo()), sip_tune(SIPTune()), nvram(NVRAMUtils())
     // This avoid construct/destruct the class twice
     CPUInfo cpu_info;
     SIPTune sip_tune;
@@ -78,6 +79,7 @@ private:
     uint64_t org_MSR_IA32_MISC_ENABLE;
     uint64_t org_MSR_IA32_PERF_CTL;
     uint64_t org_MSR_IA32_POWER_CTL;
+    uint64_t org_HWPRequest;
     
     uint64_t org_MSR_IA32_PM_ENABLE;
     

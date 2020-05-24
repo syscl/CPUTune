@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v1.9.9
+
+- Introduce HWP request at runtime
+
 ### v1.9.8
 
 - Avoid construct objects twice

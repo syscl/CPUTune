@@ -10,7 +10,6 @@
 #include <CPUInfo.hpp>
 #include <SIPTune.hpp>
 #include <kern_util.hpp>
-#include <NVRAMUtils.hpp>
 #include <IOKit/IOTimerEventSource.h>
 
 OSDefineMetaClassAndStructors(CPUTune, IOService)
@@ -52,6 +51,7 @@ bool CPUTune::init(OSDictionary *dict)
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
     org_MSR_IA32_POWER_CTL = rdmsr64(MSR_IA32_POWER_CTL);
+    org_HWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
     
     return ret;
 }
@@ -66,6 +66,7 @@ void CPUTune::initKextPerferences()
     
     OSString *keyProcHotAtRuntime = OSDynamicCast(OSString, getProperty("ProcHotAtRuntime"));
     OSBoolean *keyEnableProcHot = OSDynamicCast(OSBoolean, getProperty("EnableProcHot"));
+    OSString *hwpRequestPath = OSDynamicCast(OSString, getProperty("HWPRequestConfigPath"));
     
     if (keyTurboBoostAtRuntime != nullptr) {
         turboBoostPath = const_cast<const char *>(keyTurboBoostAtRuntime->getCStringNoCopy());
@@ -77,6 +78,10 @@ void CPUTune::initKextPerferences()
     
     if (keySpeedShiftAtRuntime != nullptr) {
         speedShiftPath = const_cast<const char *>(keySpeedShiftAtRuntime->getCStringNoCopy());
+    }
+    
+    if (hwpRequestPath) {
+        hwpRequestConfigPath = hwpRequestPath->getCStringNoCopy();
     }
 
     enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
@@ -205,6 +210,23 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         }
     }
     
+    // set hwp request value if hwp is enable
+    if (supportedSpeedShift && hwpRequestConfigPath) {
+        uint8_t *hex = readFileNBytes(hwpRequestConfigPath, 0, 10);
+        if (hex) {
+            // hex is not NULL means the hwp request exist
+            // let's check if the hex is valid before writing to MSR
+            bool validHex = static_cast<int>(strlen(reinterpret_cast<char*>(hex))) >= 8; // consider the "0x80193008\n"
+            if (validHex) {
+                uint64_t curHwpRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
+                uint64_t hwpRequest = static_cast<uint64_t>(hexToInt(reinterpret_cast<char*>(hex)));
+                if (setIfNotEqual(curHwpRequest, hwpRequest, MSR_IA32_HWP_REQUEST)) {
+                    myLOG("%s: change MSR_IA32_HWP_REQUEST(0x%llx): 0x%llx -> 0x%llx", __func__, MSR_IA32_HWP_REQUEST, curHwpRequest, hwpRequest);
+                }
+            }
+        }
+    }
+    
     if (!hwpEnableOnceSet && supportedSpeedShift && speedShiftPath) {
         // check if previous speed shift is enabled
         bool prev = rdmsr64(MSR_IA32_PM_ENABLE) == kEnableSpeedShiftBit;
@@ -311,7 +333,7 @@ void CPUTune::stop(IOService *provider)
     }
 
     // restore the previous MSR_IA32 state
-    if (setIfNotEqual(rdmsr64(MSR_IA32_POWER_CTL), org_MSR_IA32_POWER_CTL,MSR_IA32_POWER_CTL)) {
+    if (setIfNotEqual(rdmsr64(MSR_IA32_POWER_CTL), org_MSR_IA32_POWER_CTL, MSR_IA32_POWER_CTL)) {
         myLOG("stop: restore MSR_IA32_POWER_CTK from 0x%llx to 0x%llx",rdmsr64(MSR_IA32_POWER_CTL), org_MSR_IA32_POWER_CTL);
     }
     if (setIfNotEqual(rdmsr64(MSR_IA32_MISC_ENABLE), org_MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE)) {
@@ -323,6 +345,10 @@ void CPUTune::stop(IOService *provider)
     if (supportedSpeedShift) {
         if (setIfNotEqual(rdmsr64(MSR_IA32_PM_ENABLE), org_MSR_IA32_PM_ENABLE, MSR_IA32_PM_ENABLE)) {
             myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", rdmsr64(MSR_IA32_PM_ENABLE), org_MSR_IA32_PM_ENABLE);
+        }
+        
+        if (setIfNotEqual(rdmsr64(MSR_IA32_HWP_REQUEST), org_HWPRequest, MSR_IA32_HWP_REQUEST)) {
+            myLOG("%s: restore MSR_IA32_HWP_REQUEST(0x%llx) to 0x%llx", __func__, org_HWPRequest);
         }
     }
     super::stop(provider);

@@ -91,8 +91,7 @@ uint8_t *readFileNBytes(const char* path, off_t off, size_t bytes) {
         VATTR_WANTED(&va, va_data_size);
         size_t size = vnode_getattr(vnode, &va, ctx) ? 0 : va.va_data_size;
         
-        // compare which one is smaller
-        bytes = bytes < size ? bytes : size;
+        bytes = min(bytes, size);
         if (bytes > 0) {
             buffer = new uint8_t[bytes + 1];
             if (readFileData(buffer, 0, bytes, vnode, ctx)) {

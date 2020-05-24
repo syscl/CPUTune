@@ -142,6 +142,17 @@ constexpr size_t parseModuleVersion(const char *version) {
 }
 
 /**
+*  Convert a hexicimal string to a long integer
+*
+*  @param hex string literal representing the hex value
+*
+*  @return long integer base 10
+*/
+inline long hexToInt(const char *hex) {
+    return strtol(hex, NULL, 0);
+}
+
+/**
  *  Slightly non-standard helpers to get the date in a YYYY-MM-DD format.
  */
 template <size_t i>
