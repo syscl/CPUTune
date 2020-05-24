@@ -24,7 +24,6 @@ IOService *CPUTune::probe(IOService *provider, SInt32 *score) {
 
 bool CPUTune::init(OSDictionary *dict)
 {
-    NVRAMUtils nvram = NVRAMUtils();
     if (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta)) {
         myLOG("Unsupported kernel version: %d, get a CPUTune that supports current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
         nvram.setKextPanicKey();
@@ -47,8 +46,6 @@ bool CPUTune::init(OSDictionary *dict)
         myLOG("init: failed!");
         return ret;
     }
-    cpu_info = CPUInfo();
-    sip_tune = SIPTune();
     
     myLOG("init: successed!");
     

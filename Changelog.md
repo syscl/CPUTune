@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+### v1.9.8
+
+- Avoid construct objects twice
+
 ### v1.9.7
 
 - Remove useless const qualifier + improved code style

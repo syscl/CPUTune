@@ -11,6 +11,7 @@
 #include <IOKit/IOService.h>
 #include <CPUInfo.hpp>
 #include <SIPTune.hpp>
+#include <NVRAMUtils.hpp>
 
 class CPUTune : public IOService
 {
@@ -64,9 +65,13 @@ private:
     
     bool setIfNotEqual(const uint64_t, const uint64_t, const uint32_t) const;
     
+    // As per Apple, don't declare default constructor.
+    // The default constuctor CPUTune() will do the following
+    // explicitly: cpu_info = CPUInfo(); ...
+    // This avoid construct/destruct the class twice
     CPUInfo cpu_info;
-    
     SIPTune sip_tune;
+    NVRAMUtils nvram;
     
     bool allowUnrestrictedFS = false;
     
