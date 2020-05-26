@@ -87,7 +87,6 @@ void CPUTune::initKextPerferences()
 
     enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
     enableIntelProcHot = keyEnableProcHot && keyEnableProcHot->isTrue();
-    supportedSpeedShift = cpu_info.model >= cpu_info.CPU_MODEL_SKYLAKE;
     enableIntelSpeedShift = keyEnableSpeedShift && keyEnableSpeedShift->isTrue();
     
     allowUnrestrictedFS = keyAllowUnrestrictedFS && keyAllowUnrestrictedFS->isTrue();
@@ -136,14 +135,14 @@ bool CPUTune::start(IOService *provider)
     // make sure we disable ProcHot only if turboboost is disabled
     if (enableIntelProcHot) {
         enableProcHot();
-    } else if(!enableIntelTurboBoost){
+    } else if(!enableIntelTurboBoost) {
         disableProcHot();
     } else {
         myLOG("start: cannot deactivate PROCHOT while turboboost is active!");
     }
     
     // check if we need to enable Intel Speed Shift on platform on Skylake+
-    if (supportedSpeedShift) {
+    if (cpu_info.supportedHWP) {
         if (!hwpEnableOnceSet && enableIntelSpeedShift) {
             // Note this bit can only be enabled once from the default value.
             // Once set, writes to the HWP_ENABLE bit are ignored. Only RESET
@@ -212,7 +211,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     }
     
     // set hwp request value if hwp is enable
-    if (supportedSpeedShift && hwpRequestConfigPath) {
+    if (cpu_info.supportedHWP && hwpRequestConfigPath) {
         uint8_t *hex = readFileNBytes(hwpRequestConfigPath, 0, 10);
         if (hex) {
             // hex is not NULL means the hwp request config exist
@@ -230,7 +229,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         }
     }
     
-    if (!hwpEnableOnceSet && supportedSpeedShift && speedShiftPath) {
+    if (!hwpEnableOnceSet && cpu_info.supportedHWP && speedShiftPath) {
         // check if previous speed shift is enabled
         bool prev = rdmsr64(MSR_IA32_PM_ENABLE) == kEnableSpeedShiftBit;
         size_t bytes = 1;
@@ -348,7 +347,7 @@ void CPUTune::stop(IOService *provider)
     if (setIfNotEqual(cur_perf_ctl, org_MSR_IA32_PERF_CTL, MSR_IA32_PERF_CTL)) {
         myLOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", cur_perf_ctl, org_MSR_IA32_PERF_CTL);
     }
-    if (supportedSpeedShift) {
+    if (cpu_info.supportedHWP) {
         const uint64_t cur_pm_enable = rdmsr64(MSR_IA32_PM_ENABLE);
         if (setIfNotEqual(cur_pm_enable, org_MSR_IA32_PM_ENABLE, MSR_IA32_PM_ENABLE)) {
             myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", cur_pm_enable, org_MSR_IA32_PM_ENABLE);

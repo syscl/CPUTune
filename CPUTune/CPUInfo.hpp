@@ -24,21 +24,28 @@
 
 class CPUInfo {
 public:
-    CPUInfo() : model(getCPUModel()) {
+    CPUInfo() : model(getCPUModel()), supportedHWP(supportedSpeedShift()) {
         myLOG("CPUInfo: cpu model: 0x%x", model);
     };
     
     /**
      * Intel CPU models
      */
-    uint8_t model;
+    const uint8_t model;
+    
+    /**
+    *  CPU support HWP
+    */
+    const bool supportedHWP;
     
     /**
      *  Get current CPU model.
      *
      *  @return detected CPU model
      */
-    uint8_t getCPUModel(void) const;
+    const uint8_t getCPUModel(void) const;
+    
+    const bool supportedSpeedShift(void) const;
     
     /**
     *  Intel CPU models as returned by CPUID
