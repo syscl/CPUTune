@@ -39,8 +39,6 @@ private:
     bool enableIntelSpeedShift = true;
     bool hwpEnableOnceSet = false;
     
-    void initKextPerferences();
-    
     static constexpr uint64_t kEnableTurboBoostBits  = ((uint64_t)-1) ^ ((uint64_t)1) << 38;
     static constexpr uint64_t kDisableTurboBoostBits = ~kEnableTurboBoostBits;
     
@@ -66,6 +64,9 @@ private:
     void disableSpeedShift(void);
     
     bool setIfNotEqual(const uint64_t, const uint64_t, const uint32_t) const;
+    
+    const char* getStringPropertyOrElse(const char*, const char*) const;
+    const bool getBooleanOrElse(const char*, const bool) const;
     
     // As per Apple, don't declare default constructor.
     // The default constuctor CPUTune() will do the following

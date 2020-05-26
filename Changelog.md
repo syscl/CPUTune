@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.0.5
+
+- Make code cleaner and shorter, remove unnecessary ```initKextPreferences()```
+
 #### v2.0.4
 
 - Make update timeout configurable so that we have a more looser/tigher control over the HWP request

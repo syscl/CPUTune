@@ -47,7 +47,21 @@ bool CPUTune::init(OSDictionary *dict)
         return ret;
     }
     
-    initKextPerferences();
+    // get string properties
+    ProcHotPath = getStringPropertyOrElse("ProcHotAtRuntime", nullptr);
+    turboBoostPath = getStringPropertyOrElse("TurboBoostAtRuntime", nullptr);
+    speedShiftPath = getStringPropertyOrElse("SpeedShiftAtRuntime", nullptr);
+    hwpRequestConfigPath = getStringPropertyOrElse("HWPRequestConfigPath", nullptr);
+    // get boolean properties
+    enableIntelTurboBoost = getBooleanOrElse("EnableTurboBoost", false);
+    enableIntelProcHot = getBooleanOrElse("EnableProcHot", false);
+    enableIntelSpeedShift = getBooleanOrElse("EnableSpeedShift", false);
+    allowUnrestrictedFS = getBooleanOrElse("AllowUnrestrictedFS", false);
+    
+    if (OSNumber *timeout = OSDynamicCast(OSNumber, getProperty("UpdateInterval"))) {
+        updateInterval = timeout->unsigned32BitValue();
+        myLOG("Update time interval %u ms per cycle", updateInterval);
+    }
     
     myLOG("init: succeeded!");
     
@@ -59,44 +73,18 @@ bool CPUTune::init(OSDictionary *dict)
     return ret;
 }
 
-void CPUTune::initKextPerferences()
-{
-    OSString *keyTurboBoostAtRuntime = OSDynamicCast(OSString, getProperty("TurboBoostAtRuntime"));
-    OSString *keySpeedShiftAtRuntime = OSDynamicCast(OSString, getProperty("SpeedShiftAtRuntime"));
-    OSBoolean *keyEnableTurboBoost = OSDynamicCast(OSBoolean, getProperty("EnableTurboBoost"));
-    OSBoolean *keyEnableSpeedShift = OSDynamicCast(OSBoolean, getProperty("EnableSpeedShift"));
-    OSBoolean *keyAllowUnrestrictedFS = OSDynamicCast(OSBoolean, getProperty("AllowUnrestrictedFS"));
-    
-    OSString *keyProcHotAtRuntime = OSDynamicCast(OSString, getProperty("ProcHotAtRuntime"));
-    OSBoolean *keyEnableProcHot = OSDynamicCast(OSBoolean, getProperty("EnableProcHot"));
-    OSString *hwpRequestPath = OSDynamicCast(OSString, getProperty("HWPRequestConfigPath"));
-    
-    if (keyTurboBoostAtRuntime != nullptr) {
-        turboBoostPath = const_cast<const char *>(keyTurboBoostAtRuntime->getCStringNoCopy());
+const char* CPUTune::getStringPropertyOrElse(const char* key, const char* defaultProperty) const {
+    if (OSString* value = OSDynamicCast(OSString, getProperty(key))) {
+        return value->getCStringNoCopy();
     }
-    
-    if (keyProcHotAtRuntime != nullptr) {
-        ProcHotPath = const_cast<const char *>(keyProcHotAtRuntime->getCStringNoCopy());
-    }
-    
-    if (keySpeedShiftAtRuntime != nullptr) {
-        speedShiftPath = const_cast<const char *>(keySpeedShiftAtRuntime->getCStringNoCopy());
-    }
-    
-    if (hwpRequestPath) {
-        hwpRequestConfigPath = hwpRequestPath->getCStringNoCopy();
-    }
-    
-    if (OSNumber* timeout = OSDynamicCast(OSNumber, getProperty("UpdateInterval"))) {
-        updateInterval = timeout->unsigned32BitValue();
-        myLOG("Update time interval %u ms per cycle", updateInterval);
-    }
+    return defaultProperty;
+}
 
-    enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
-    enableIntelProcHot = keyEnableProcHot && keyEnableProcHot->isTrue();
-    enableIntelSpeedShift = keyEnableSpeedShift && keyEnableSpeedShift->isTrue();
-    
-    allowUnrestrictedFS = keyAllowUnrestrictedFS && keyAllowUnrestrictedFS->isTrue();
+const bool CPUTune::getBooleanOrElse(const char* key, const bool defaultValue) const {
+    if (OSBoolean* value = OSDynamicCast(OSBoolean, getProperty(key))) {
+        return value->isTrue();
+    }
+    return defaultValue;
 }
 
 bool CPUTune::start(IOService *provider)
