@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.0.6
+
+- Tune turbo ratio limit at runtime when turbo is enabled
+
 #### v2.0.5
 
 - Make code cleaner and shorter, remove unnecessary ```initKextPreferences()```

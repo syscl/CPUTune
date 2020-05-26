@@ -39,5 +39,3 @@ void SIPTune::setBootCSRActiveConfig(const uint32_t flag)
         (*csr) |= flag;
     }
 }
-
-

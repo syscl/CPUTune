@@ -6,7 +6,8 @@ An open source kernel extension enables dynamic CPU performance tuning at runtim
 #### Features
 - Allows turning on or off Intel Turbo Boost for better battery life
 - Allows turning on or off Intel Speed Shift for maximum performance
-- Provide the fine granularity to change HWP (performance value) at runtime
+- Provides the fine granularity to change HWP (performance value) at runtime
+- Provides the control over tuning turbo ratio limit at runtime when turbo boost is enabled
 - Allows turning on or off Intel Proc Hot (```BD_PROCHOT```) for running without a battery. Please note that this is NOT recommended and can seriously damage your mac. Do at your own risk.
 - Implements TimerEvent-based responses for dynamical switching Turbo Boost and Speed Shift at runtime
 - Allows System Integrity Protection (SIP) control a bit easier via Info.plist setting 

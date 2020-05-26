@@ -30,6 +30,7 @@ private:
     const char *ProcHotPath = nullptr;
     const char *speedShiftPath = nullptr;
     const char *hwpRequestConfigPath = nullptr;
+    const char *turboRatioLimitConfigPath = nullptr;
     uint32_t updateInterval = 2000;
     bool enableIntelTurboBoost = true;
     bool enableIntelProcHot = false;
@@ -82,6 +83,7 @@ private:
     uint64_t org_MSR_IA32_PERF_CTL;
     uint64_t org_MSR_IA32_POWER_CTL;
     uint64_t org_HWPRequest;
+    uint64_t org_TurboRatioLimit;
     
     uint64_t org_MSR_IA32_PM_ENABLE;
     

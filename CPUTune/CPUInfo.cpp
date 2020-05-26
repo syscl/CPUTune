@@ -6,6 +6,7 @@
 //
 
 #include "CPUInfo.hpp"
+#include <i386/proc_reg.h>
 
 const uint8_t CPUInfo::getCPUModel() const {
     uint32_t cpuid_reg[4];
@@ -15,4 +16,9 @@ const uint8_t CPUInfo::getCPUModel() const {
 
 const bool CPUInfo::supportedSpeedShift() const {
     return model >= CPU_MODEL_SKYLAKE;
+}
+
+const uint8_t CPUInfo::getCoreCount() const {
+    uint64_t coreThreadCountMSR = rdmsr64(MSR_CORE_THREAD_COUNT);
+    return bitfield32(coreThreadCountMSR, 31, 16);
 }

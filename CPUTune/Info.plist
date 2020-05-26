@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.5</string>
+	<string>2.0.6</string>
 	<key>CFBundleVersion</key>
-	<string>2.0.5</string>
+	<string>2.0.6</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>CPUTune</key>
@@ -40,6 +40,8 @@
 			<string>/tmp/CPUTuneProcHotRT.conf</string>
 			<key>HWPRequestConfigPath</key>
 			<string>/tmp/HWPRequest.conf</string>
+			<key>TurboRatioLimitConfigPath</key>
+			<string>/tmp/TurboRatioLimit.conf</string>
 			<key>EnableSpeedShift</key>
 			<true/>
 			<key>UpdateInterval</key>

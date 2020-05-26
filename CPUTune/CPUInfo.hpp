@@ -15,6 +15,9 @@
 #define bitmask64(h, l)        ((bit(h) | (bit(h) - 1)) & ~ (bit(l) - 1))
 #define bitfield32(x, h, l)    (((x) & bitmask64(h, l)) >> l)
 
+// As per xnu/osfmk/proc_reg.h
+#define    MSR_CORE_THREAD_COUNT    0x35
+
 // Intel SpeedShift MSRs
 #define MSR_IA32_PM_ENABLE          0x770
 #define MSR_IA32_HWP_REQUEST        0x774
@@ -22,10 +25,16 @@
 // Intel Power MSRs
 #define MSR_IA32_POWER_CTL          0x1FC
 
+// Turbo ratio limit
+// Software Developer's Manual Volume 4: Model-Specific Registers
+#define MSR_TURBO_RATIO_LIMIT       0x1AD
+#define MSR_TURBO_RATIO_LIMIT1      0x1AE
+#define MSR_TURBO_RATIO_LIMIT2      0x1AF
+
 class CPUInfo {
 public:
-    CPUInfo() : model(getCPUModel()), supportedHWP(supportedSpeedShift()) {
-        myLOG("CPUInfo: cpu model: 0x%x", model);
+    CPUInfo() : model(getCPUModel()), supportedHWP(supportedSpeedShift()), coreCount(getCoreCount()) {
+        myLOG("CPUInfo: cpu model: 0x%x, number of cores: %d", model, coreCount);
     };
     
     /**
@@ -34,9 +43,14 @@ public:
     const uint8_t model;
     
     /**
-    *  CPU support HWP
-    */
+     *  CPU support HWP
+     */
     const bool supportedHWP;
+    
+    /**
+     * CPU Cores Count
+     */
+    const uint8_t coreCount;
     
     /**
      *  Get current CPU model.
@@ -46,6 +60,8 @@ public:
     const uint8_t getCPUModel(void) const;
     
     const bool supportedSpeedShift(void) const;
+    
+    const uint8_t getCoreCount(void) const;
     
     /**
     *  Intel CPU models as returned by CPUID

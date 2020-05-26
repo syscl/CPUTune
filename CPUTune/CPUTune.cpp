@@ -52,6 +52,7 @@ bool CPUTune::init(OSDictionary *dict)
     turboBoostPath = getStringPropertyOrElse("TurboBoostAtRuntime", nullptr);
     speedShiftPath = getStringPropertyOrElse("SpeedShiftAtRuntime", nullptr);
     hwpRequestConfigPath = getStringPropertyOrElse("HWPRequestConfigPath", nullptr);
+    turboRatioLimitConfigPath = getStringPropertyOrElse("TurboRatioLimitConfigPath", nullptr);
     // get boolean properties
     enableIntelTurboBoost = getBooleanOrElse("EnableTurboBoost", false);
     enableIntelProcHot = getBooleanOrElse("EnableProcHot", false);
@@ -69,6 +70,7 @@ bool CPUTune::init(OSDictionary *dict)
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
     org_MSR_IA32_POWER_CTL = rdmsr64(MSR_IA32_POWER_CTL);
     org_HWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
+    org_TurboRatioLimit = rdmsr64(MSR_TURBO_RATIO_LIMIT);
     
     return ret;
 }
@@ -164,8 +166,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     if (turboBoostPath) {
         // check if previous turbo boost is enabled
         bool prev = rdmsr64(MSR_IA32_MISC_ENABLE) == (org_MSR_IA32_MISC_ENABLE & kEnableTurboBoostBits);
-        size_t bytes = 1;
-        uint8_t *buffer = readFileNBytes(turboBoostPath, 0, bytes);
+        uint8_t *buffer = readFileNBytes(turboBoostPath, 0, 1);
         // check if currently request enable turbo boost
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
@@ -174,18 +175,33 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             myLOG("readConfigAtRuntime: %s Intel Turbo Boost", curr ? "enable" : "disable");
             if (curr) {
                 enableTurboBoost();
-
             } else {
                 disableTurboBoost();
 
             }
         }
     }
+    
+    // Turbo ratio limit
+    if ((rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits) && turboRatioLimitConfigPath) {
+        size_t valid_length = cpu_info.coreCount * 2 + 2; // +2 for '0x'/'0X'
+        if (uint8_t* config = readFileNBytes(turboRatioLimitConfigPath, 0, valid_length)) {
+            long limit = hexToInt(reinterpret_cast<char*>(config));
+            if (limit == ERANGE) {
+                myLOG("%s: Turbo ratio limit is not a valid hexadecimal constant at %s", __func__, limit, turboRatioLimitConfigPath);
+            } else {
+                uint64_t curLimit = rdmsr64(MSR_TURBO_RATIO_LIMIT);
+                uint64_t usrLimit = static_cast<uint64_t>(limit);
+                if (setIfNotEqual(curLimit, usrLimit, MSR_TURBO_RATIO_LIMIT)) {
+                    myLOG("%s: Change turbo ratio limit: 0x%llx -> 0x%llx", __func__, curLimit, usrLimit);
+                }
+            }
+        }
+    }
 
     if (ProcHotPath) {
         bool prev = rdmsr64(MSR_IA32_POWER_CTL) & kEnableProcHotBit;
-        size_t bytes = 1;
-        uint8_t *buffer = readFileNBytes(ProcHotPath, 0, bytes);
+        uint8_t *buffer = readFileNBytes(ProcHotPath, 0, 1);
         // check if currently request enable ProcHot
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
@@ -205,8 +221,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     
     // set hwp request value if hwp is enable
     if (cpu_info.supportedHWP && hwpRequestConfigPath) {
-        uint8_t *hex = readFileNBytes(hwpRequestConfigPath, 0, 10);
-        if (hex) {
+        if (uint8_t *hex = readFileNBytes(hwpRequestConfigPath, 0, 10)) {
             // hex is not NULL means the hwp request config exist
             // let's check if the hex is valid before writing to MSR
             long req = hexToInt(reinterpret_cast<char*>(hex));
@@ -225,8 +240,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     if (!hwpEnableOnceSet && cpu_info.supportedHWP && speedShiftPath) {
         // check if previous speed shift is enabled
         bool prev = rdmsr64(MSR_IA32_PM_ENABLE) == kEnableSpeedShiftBit;
-        size_t bytes = 1;
-        uint8_t *buffer = readFileNBytes(speedShiftPath, 0, bytes);
+        uint8_t *buffer = readFileNBytes(speedShiftPath, 0, 1);
         // check if currently request enable speed shift
         bool curr = buffer && (*buffer == '1');
         if (buffer && curr != prev) {
