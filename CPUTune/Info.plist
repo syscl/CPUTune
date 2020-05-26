@@ -43,11 +43,11 @@
 			<key>TurboRatioLimitConfigPath</key>
 			<string>/tmp/TurboRatioLimit.conf</string>
 			<key>EnableSpeedShift</key>
-			<false/>
+			<true/>
 			<key>UpdateInterval</key>
 			<integer>1000</integer>
 			<key>EnableTurboBoost</key>
-			<true/>
+			<false/>
 			<key>EnableProcHot</key>
 			<false/>
 			<key>AllowUnrestrictedFS</key>
