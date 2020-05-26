@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.0.7
+
+- Fix memory leak by freeing buffer after use
+
 #### v2.0.6
 
 - Tune turbo ratio limit at runtime when turbo is enabled

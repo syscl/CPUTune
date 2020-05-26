@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.6</string>
+	<string>2.0.7</string>
 	<key>CFBundleVersion</key>
-	<string>2.0.6</string>
+	<string>2.0.7</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>CPUTune</key>
@@ -43,11 +43,11 @@
 			<key>TurboRatioLimitConfigPath</key>
 			<string>/tmp/TurboRatioLimit.conf</string>
 			<key>EnableSpeedShift</key>
-			<true/>
+			<false/>
 			<key>UpdateInterval</key>
 			<integer>1000</integer>
 			<key>EnableTurboBoost</key>
-			<false/>
+			<true/>
 			<key>EnableProcHot</key>
 			<false/>
 			<key>AllowUnrestrictedFS</key>

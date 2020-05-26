@@ -187,6 +187,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         size_t valid_length = cpu_info.coreCount * 2 + 2; // +2 for '0x'/'0X'
         if (uint8_t* config = readFileNBytes(turboRatioLimitConfigPath, 0, valid_length)) {
             long limit = hexToInt(reinterpret_cast<char*>(config));
+            deleter(config);
             if (limit == ERANGE) {
                 myLOG("%s: Turbo ratio limit is not a valid hexadecimal constant at %s", __func__, limit, turboRatioLimitConfigPath);
             } else {
@@ -225,6 +226,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             // hex is not NULL means the hwp request config exist
             // let's check if the hex is valid before writing to MSR
             long req = hexToInt(reinterpret_cast<char*>(hex));
+            deleter(hex);
             if (req == ERANGE) {
                 myLOG("%s: HWP Request %s is not a valid hexadecimal constant at %s", __func__, hex, hwpRequestConfigPath);
             } else {
