@@ -17,11 +17,12 @@ An open source kernel extension enables dynamic CPU performance tuning at runtim
 
 #### Configuration
 Open terminal:
-- Type in ```echo "1">/tmp/CPUTuneTurboBoostRT.conf``` to enable turbo boost when CPUTune is loaded
-- Type in ```echo "0">/tmp/CPUTuneTurboBoostRT.conf``` to disable turbo boost when needed
+- Type in ```echo 1>/tmp/CPUTuneTurboBoostRT.conf``` to enable turbo boost when CPUTune is loaded
+- Type in ```echo 0>/tmp/CPUTuneTurboBoostRT.conf``` to disable turbo boost when needed
 - Type in ```echo <request value> >/tmp/HWPRequest.conf``` to submit persistency hwp request at runtime. For example ```<requet value> = 0x80193008``` 
-- Type in  ```echo "1">/tmp/CPUTuneProcHotRT.conf``` to enable proc hot when needed
-- Type in  ```echo "0">/tmp/CPUTuneProcHotRT.conf``` to siable proc hot when needed
+- Type in  ```echo 1>/tmp/CPUTuneProcHotRT.conf``` to enable proc hot when needed
+- Type in  ```echo 0>/tmp/CPUTuneProcHotRT.conf``` to siable proc hot when needed
+- Change update time interval (millisecond) in `CPUTune.kext/Contents/Info.plist` to have a more  looser/tigher control over HWP request
 - In case you want a simplify command to switch turbo boost, change the `TurboBoostAtRuntime` in `CPUTune.kext/Contents/Info.plist`
 
 #### Contribution

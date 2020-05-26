@@ -30,6 +30,7 @@ private:
     const char *ProcHotPath = nullptr;
     const char *speedShiftPath = nullptr;
     const char *hwpRequestConfigPath = nullptr;
+    uint32_t updateInterval = 2000;
     bool enableIntelTurboBoost = true;
     bool enableIntelProcHot = false;
     bool supportedSpeedShift = false;

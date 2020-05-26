@@ -1,5 +1,10 @@
 CPUTune Changelog
 =======================
+#### v2.0.4
+
+- Make update timeout configurable so that we have a more looser/tigher control over the HWP request
+- Move the ```initKextPreferences()``` up to ```CPUTune::init()```
+
 #### v2.0.3
 
 - Decouple HWP information to ```CPUInfo```

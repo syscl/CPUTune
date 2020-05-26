@@ -47,6 +47,8 @@ bool CPUTune::init(OSDictionary *dict)
         return ret;
     }
     
+    initKextPerferences();
+    
     myLOG("init: succeeded!");
     
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
@@ -84,6 +86,11 @@ void CPUTune::initKextPerferences()
     if (hwpRequestPath) {
         hwpRequestConfigPath = hwpRequestPath->getCStringNoCopy();
     }
+    
+    if (OSNumber* timeout = OSDynamicCast(OSNumber, getProperty("UpdateInterval"))) {
+        updateInterval = timeout->unsigned32BitValue();
+        myLOG("Update time interval %u ms per cycle", updateInterval);
+    }
 
     enableIntelTurboBoost = keyEnableTurboBoost && keyEnableTurboBoost->isTrue();
     enableIntelProcHot = keyEnableProcHot && keyEnableProcHot->isTrue();
@@ -99,8 +106,6 @@ bool CPUTune::start(IOService *provider)
         myLOG("start: cannot start provider or provider does not exist.");
         return ret;
     }
-    
-    initKextPerferences();
     
     // let's turn off some of the SIP bits so that we can debug it easily on a real mac
     if (allowUnrestrictedFS) {
@@ -247,7 +252,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         // deallocate the buffer
         deleter(buffer);
     }
-    sender->setTimeoutMS(2000);
+    sender->setTimeoutMS(updateInterval);
 }
 
 bool CPUTune::setIfNotEqual(const uint64_t current, const uint64_t expect, const uint32_t msr) const {
