@@ -10,13 +10,14 @@
 
 #include "kern_util.hpp"
 #include <i386/cpuid.h>
+#include <i386/proc_reg.h>
 /* Copied from xnu/osfmk/cpuid.c (modified for 64-bit values) */
 #define bit(n)                 (1UL << (n))
 #define bitmask64(h, l)        ((bit(h) | (bit(h) - 1)) & ~ (bit(l) - 1))
 #define bitfield32(x, h, l)    (((x) & bitmask64(h, l)) >> l)
 
 // As per xnu/osfmk/proc_reg.h
-#define    MSR_CORE_THREAD_COUNT    0x35
+#define MSR_CORE_THREAD_COUNT       0x35
 
 // Intel SpeedShift MSRs
 #define MSR_IA32_PM_ENABLE          0x770
@@ -25,16 +26,26 @@
 // Intel Power MSRs
 #define MSR_IA32_POWER_CTL          0x1FC
 
-// Turbo ratio limit
-// Software Developer's Manual Volume 4: Model-Specific Registers
+// Maximum Ratio Limit of Turbo Mode
+// RW or RO stores in MSR_PLATFORM_INFO.[28]
+// Refer Software Developer's Manual Volume 4: Model-Specific Registers
+#define MSR_TURBO_RATIO_LIMIT_RW    (1 << 28)
 #define MSR_TURBO_RATIO_LIMIT       0x1AD
 #define MSR_TURBO_RATIO_LIMIT1      0x1AE
 #define MSR_TURBO_RATIO_LIMIT2      0x1AF
 
 class CPUInfo {
 public:
-    CPUInfo() : model(getCPUModel()), supportedHWP(supportedSpeedShift()), coreCount(getCoreCount()) {
-        myLOG("CPUInfo: cpu model: 0x%x, number of cores: %d", model, coreCount);
+    CPUInfo() :
+        model(getCPUModel()),
+        supportedHWP(supportedSpeedShift()),
+        coreCount(getCoreCount()),
+        turboRatioLimitRW(getTurboRatioLimitRW()) {
+        myLOG("CPUInfo: cpu model: 0x%x, %s HWP, number of cores: %d, turbo ratio limit permission: %s",
+              model,
+              (supportedHWP ? "supported" : "unsupported"),
+              coreCount,
+              (turboRatioLimitRW ? "RW" : "RO"));
     };
     
     /**
@@ -52,6 +63,8 @@ public:
      */
     const uint8_t coreCount;
     
+    const bool turboRatioLimitRW;
+    
     /**
      *  Get current CPU model.
      *
@@ -62,6 +75,8 @@ public:
     const bool supportedSpeedShift(void) const;
     
     const uint8_t getCoreCount(void) const;
+    
+    const bool getTurboRatioLimitRW(void) const;
     
     /**
     *  Intel CPU models as returned by CPUID

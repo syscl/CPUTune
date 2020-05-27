@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.0.8
+
+- Check turbo rate limit RW/RO before writting to MSR
+
 #### v2.0.7
 
 - Fix memory leak by freeing buffer after use
@@ -110,7 +114,7 @@ CPUTune Changelog
 
 #### v1.7.0
 - Fixed compatible issues (supported OS X Mountain Lion and Xcode 3.2)
-- Fixed code logic of HWP Enable, details can be fond [here](https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf)
+- Fixed code logic of HWP Enable, details can be found [here](https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf)
 
 #### v1.6.5
 - Implemented Timer Event based feature for dynamic control CPU Performance at runtime 

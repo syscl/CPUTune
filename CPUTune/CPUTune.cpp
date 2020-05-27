@@ -183,7 +183,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     }
     
     // Turbo ratio limit
-    if ((rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits) && turboRatioLimitConfigPath) {
+    if ((rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits) && cpu_info.turboRatioLimitRW && turboRatioLimitConfigPath) {
         size_t valid_length = cpu_info.coreCount * 2 + 2; // +2 for '0x'/'0X'
         if (uint8_t* config = readFileNBytes(turboRatioLimitConfigPath, 0, valid_length)) {
             long limit = hexToInt(reinterpret_cast<char*>(config));

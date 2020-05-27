@@ -19,6 +19,11 @@ const bool CPUInfo::supportedSpeedShift() const {
 }
 
 const uint8_t CPUInfo::getCoreCount() const {
-    uint64_t coreThreadCountMSR = rdmsr64(MSR_CORE_THREAD_COUNT);
-    return bitfield32(coreThreadCountMSR, 31, 16);
+    return bitfield32(rdmsr64(MSR_CORE_THREAD_COUNT), 31, 16);
+}
+
+const bool CPUInfo::getTurboRatioLimitRW() const {
+    // RO if MSR_PLATFORM_INFO.[28] = 0
+    // RW if MSR_PLATFORM_INFO.[28] = 1
+    return rdmsr64(MSR_PLATFORM_INFO) & MSR_TURBO_RATIO_LIMIT_RW;
 }
