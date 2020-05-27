@@ -1,5 +1,10 @@
 CPUTune Changelog
 =======================
+#### v2.1.0
+
+- Introduce ```DBGLOG()``` macro to reduce the log noise
+- Rename ```myLOG()``` to ```LOG()```
+
 #### v2.0.9
 
 - Remove unused header in CPUInfo's header; bump to the right version

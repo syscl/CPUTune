@@ -26,25 +26,25 @@ errno_t writeBufferToFile(const char *path, char *buffer) {
     
     if (ctxt) {
         if ((err = vnode_open(path, fmode, cmode, VNODE_LOOKUP_NOFOLLOW, &vp, ctxt))) {
-            myLOG("writeBufferToFile: vnode_open(%s) failed with error %d!\n", path, err);
+            LOG("writeBufferToFile: vnode_open(%s) failed with error %d!\n", path, err);
         } else {
             if ((err = vnode_isreg(vp)) == VREG) {
                 if ((err = vn_rdwr(UIO_WRITE, vp, buffer, length, logFileOffset, UIO_SYSSPACE, IO_NOCACHE|IO_NODELOCKED|IO_UNIT, vfs_context_ucred(ctxt), (int *) 0, vfs_context_proc(ctxt)))) {
-                    myLOG("writeBufferToFile: vn_rdwr(%s) failed with error %d!\n", path, err);
+                    LOG("writeBufferToFile: vn_rdwr(%s) failed with error %d!\n", path, err);
                 } else {
                     logFileOffset += length;
                 }
             } else {
-                myLOG("writeBufferToFile: vnode_isreg(%s) failed with error %d!\n", path, err);
+                LOG("writeBufferToFile: vnode_isreg(%s) failed with error %d!\n", path, err);
             }
             
             if ((err = vnode_close(vp, FWASWRITTEN, ctxt))) {
-                myLOG("writeBufferToFile: vnode_close(%s) failed with error %d!\n", path, err);
+                LOG("writeBufferToFile: vnode_close(%s) failed with error %d!\n", path, err);
             }
         }
         vfs_context_rele(ctxt);
     } else {
-        myLOG("writeBufferToFile: cannot obtain ctxt!\n");
+        LOG("writeBufferToFile: cannot obtain ctxt!\n");
         err = 0xFFFF;
     }
     
@@ -54,14 +54,14 @@ errno_t writeBufferToFile(const char *path, char *buffer) {
 int readFileData(void *buffer, off_t off, size_t size, vnode_t vnode, vfs_context_t ctxt) {
     uio_t uio = uio_create(1, off, UIO_SYSSPACE, UIO_READ);
     if (!uio) {
-        // myLOG("readFileData: uio_create returned null!");
+        // LOG("readFileData: uio_create returned null!");
         return EINVAL;
     }
     
     // imitate the kernel and read a single page from the file
     int error = uio_addiov(uio, CAST_USER_ADDR_T(buffer), size);
     if (error) {
-        // myLOG("readFileData: uio_addiov returned error %d!", error);
+        // LOG("readFileData: uio_addiov returned error %d!", error);
         return error;
     }
     

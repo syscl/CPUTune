@@ -38,11 +38,24 @@ extern uint32_t ADDPR(debugPrintDelay);
  *
  *  @param str    printf-like string
  */
-#define myLOG(str, ...)                                                                          \
+#define LOG(str, ...)                                                                            \
     do {                                                                                         \
         cputune_os_log("CPUTune @ " str "\n", ## __VA_ARGS__);                                   \
     } while (0)
 
+/**
+ *  Write debug log (DBGLOG) to system log with kernel extension name
+ *
+ *  @param str    printf-like string
+ */
+#if DEBUG
+#define DBGLOG(str, ...)                                                                        \
+    do {                                                                                        \
+        cputune_os_log("DEBUG: CPUTune @ " str "\n", ## __VA_ARGS__);                           \
+    } while (0)
+#else
+#define DBGLOG(str, ...) do {} while(0)
+#endif
 
 /**
  *  Write to system log

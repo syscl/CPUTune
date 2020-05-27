@@ -37,14 +37,14 @@ bool NVRAMUtils::isKextPanicLastBoot() const {
 IODTNVRAM *NVRAMUtils::getNVRAMEntry(void) const {
     IORegistryEntry *entry = IORegistryEntry::fromPath("/options", gIODTPlane);
     if (!entry) {
-        myLOG("Failed to get NVRAM entry!");
+        LOG("Failed to get NVRAM entry!");
         return nullptr;
     }
     
     IODTNVRAM *nvram = OSDynamicCast(IODTNVRAM, entry);
     if (!nvram) {
         entry->release();
-        myLOG("Failed to cast to IODTNVRAM entry!");
+        LOG("Failed to cast to IODTNVRAM entry!");
         return nullptr;
     }
     
@@ -65,7 +65,7 @@ int NVRAMUtils::getProperty(const char *symbol, void *value, size_t *len) const 
     *len = 0;
     OSObject *o = nvram->getProperty(symbol);
     if (o == nullptr) {
-        myLOG("%s not existed in NVRAM property", symbol);
+        DBGLOG("%s not existed in NVRAM property", symbol);
         nvram->release();
         return 0;
     }
@@ -85,7 +85,7 @@ int NVRAMUtils::getProperty(const char *symbol, void *value, size_t *len) const 
         }
         memcpy((void *)value, data->getBytesNoCopy(), min(*len, vlen));
     } else {
-        myLOG("Unsupported type in NVRAM property: %s", o->getMetaClass()->getClassName());
+        LOG("Unsupported type in NVRAM property: %s", o->getMetaClass()->getClassName());
         nvram->release();
         return 0;
     }

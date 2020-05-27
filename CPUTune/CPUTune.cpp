@@ -25,12 +25,12 @@ IOService *CPUTune::probe(IOService *provider, SInt32 *score) {
 bool CPUTune::init(OSDictionary *dict)
 {
     if (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta)) {
-        myLOG("Unsupported kernel version: %d, get a CPUTune that supports current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
+        LOG("Unsupported kernel version: %d, get a CPUTune that supports current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
         nvram.setKextPanicKey();
         return false;
     } else if (nvram.isKextPanicLastBoot()) {
         // clear the panic key
-        myLOG("Found % key being set in NVRAM, CPUTune (%s) supportted kernel version %d, clear the panic key", kCPUTUNE_PANIC_KEY, kextVersion, getKernelVersion());
+        LOG("Found % key being set in NVRAM, CPUTune (%s) supportted kernel version %d, clear the panic key", kCPUTUNE_PANIC_KEY, kextVersion, getKernelVersion());
         nvram.clearKextPanicKey();
     }
     
@@ -38,12 +38,12 @@ bool CPUTune::init(OSDictionary *dict)
                       checkKernelArgument("-x") |
                       checkKernelArgument(bootargOff);
     if (isDisabled) {
-        myLOG("init: not allow to run.");
+        LOG("init: not allow to run.");
         return false;
     }
     bool ret = super::init(dict);
     if (!ret) {
-        myLOG("init: failed!");
+        LOG("init: failed!");
         return ret;
     }
     
@@ -61,10 +61,10 @@ bool CPUTune::init(OSDictionary *dict)
     
     if (OSNumber *timeout = OSDynamicCast(OSNumber, getProperty("UpdateInterval"))) {
         updateInterval = timeout->unsigned32BitValue();
-        myLOG("Update time interval %u ms per cycle", updateInterval);
+        LOG("Update time interval %u ms per cycle", updateInterval);
     }
     
-    myLOG("init: succeeded!");
+    LOG("init: succeeded!");
     
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
@@ -93,7 +93,7 @@ bool CPUTune::start(IOService *provider)
 {
     bool ret = super::start(provider);
     if (!ret || provider == nullptr) {
-        myLOG("start: cannot start provider or provider does not exist.");
+        LOG("start: cannot start provider or provider does not exist.");
         return ret;
     }
     
@@ -107,13 +107,13 @@ bool CPUTune::start(IOService *provider)
     timerSource = IOTimerEventSource::timerEventSource(this,
                     OSMemberFunctionCast(IOTimerEventSource::Action, this, &CPUTune::readConfigAtRuntime));
     if (!timerSource) {
-        myLOG("start: failed to create timer event source!");
+        LOG("start: failed to create timer event source!");
         // Handle error (typically by returning a failure result).
         return false;
     }
     
     if (myWorkLoop->addEventSource(timerSource) != kIOReturnSuccess) {
-        myLOG("start: failed to add timer event source to work loop!");
+        LOG("start: failed to add timer event source to work loop!");
         // Handle error (typically by returning a failure result).
         return false;
     }
@@ -133,7 +133,7 @@ bool CPUTune::start(IOService *provider)
     } else if(!enableIntelTurboBoost) {
         disableProcHot();
     } else {
-        myLOG("start: cannot deactivate PROCHOT while turboboost is active!");
+        LOG("start: cannot deactivate PROCHOT while turboboost is active!");
     }
     
     // check if we need to enable Intel Speed Shift on platform on Skylake+
@@ -146,10 +146,10 @@ bool CPUTune::start(IOService *provider)
             hwpEnableOnceSet = true;
         } 
     } else {
-        myLOG("start: cpu model (0x%x) does not support Intel SpeedShift.", cpu_info.model);
+        LOG("start: cpu model (0x%x) does not support Intel SpeedShift.", cpu_info.model);
     }
     
-    myLOG("start: registerService");
+    LOG("start: registerService");
     registerService();
     return ret;
 }
@@ -172,7 +172,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         // deallocate the buffer
         deleter(buffer);
         if (curr != prev) {
-            myLOG("readConfigAtRuntime: %s Intel Turbo Boost", curr ? "enable" : "disable");
+            LOG("readConfigAtRuntime: %s Intel Turbo Boost", curr ? "enable" : "disable");
             if (curr) {
                 enableTurboBoost();
             } else {
@@ -189,12 +189,12 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             long limit = hexToInt(reinterpret_cast<char*>(config));
             deleter(config);
             if (limit == ERANGE) {
-                myLOG("%s: Turbo ratio limit is not a valid hexadecimal constant at %s", __func__, limit, turboRatioLimitConfigPath);
+                LOG("%s: Turbo ratio limit is not a valid hexadecimal constant at %s", __func__, limit, turboRatioLimitConfigPath);
             } else {
                 uint64_t curLimit = rdmsr64(MSR_TURBO_RATIO_LIMIT);
                 uint64_t usrLimit = static_cast<uint64_t>(limit);
                 if (setIfNotEqual(curLimit, usrLimit, MSR_TURBO_RATIO_LIMIT)) {
-                    myLOG("%s: Change turbo ratio limit: 0x%llx -> 0x%llx", __func__, curLimit, usrLimit);
+                    LOG("%s: Change turbo ratio limit: 0x%llx -> 0x%llx", __func__, curLimit, usrLimit);
                 }
             }
         }
@@ -208,13 +208,13 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         // deallocate the buffer
         deleter(buffer);
         if (curr != prev) {
-            myLOG("readConfigAtRunTime: %s Intel Proc Hot", curr ? "enable" : "disable");
+            LOG("readConfigAtRunTime: %s Intel Proc Hot", curr ? "enable" : "disable");
             if (curr) {
                 enableProcHot();
             } else if((rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits) != kEnableTurboBoostBits){
                 disableProcHot();
             } else {
-                myLOG("readConfigAtRuntime: Cannot disable PROCHOT while turboboost is active!");
+                LOG("readConfigAtRuntime: Cannot disable PROCHOT while turboboost is active!");
             }
                 
         }
@@ -228,12 +228,12 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             long req = hexToInt(reinterpret_cast<char*>(hex));
             deleter(hex);
             if (req == ERANGE) {
-                myLOG("%s: HWP Request %s is not a valid hexadecimal constant at %s", __func__, hex, hwpRequestConfigPath);
+                LOG("%s: HWP Request %s is not a valid hexadecimal constant at %s", __func__, hex, hwpRequestConfigPath);
             } else {
                 uint64_t curHWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
                 uint64_t usrHWPRequest = static_cast<uint64_t>(req);
                if (setIfNotEqual(curHWPRequest, usrHWPRequest, MSR_IA32_HWP_REQUEST)) {
-                   myLOG("%s: change MSR_IA32_HWP_REQUEST(0x%llx): 0x%llx -> 0x%llx", __func__, MSR_IA32_HWP_REQUEST, curHWPRequest, usrHWPRequest);
+                   LOG("%s: change MSR_IA32_HWP_REQUEST(0x%llx): 0x%llx -> 0x%llx", __func__, MSR_IA32_HWP_REQUEST, curHWPRequest, usrHWPRequest);
                }
             }
         }
@@ -246,7 +246,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
         // check if currently request enable speed shift
         bool curr = buffer && (*buffer == '1');
         if (buffer && curr != prev) {
-            myLOG("readConfigAtRuntime: %s Intel Speed Shift", curr ? "enable" : "disable");
+            LOG("readConfigAtRuntime: %s Intel Speed Shift", curr ? "enable" : "disable");
             if (curr) {
                 enableSpeedShift();
             } else {
@@ -273,9 +273,9 @@ void CPUTune::enableTurboBoost()
     // flip bit 38 to 0
     const uint64_t val = cur & kEnableTurboBoostBits;
     if (setIfNotEqual(cur, val, MSR_IA32_MISC_ENABLE)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", __func__, cur, val, MSR_IA32_MISC_ENABLE);
+        LOG("%s: change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", __func__, cur, val, MSR_IA32_MISC_ENABLE);
     } else {
-        myLOG("%s: 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_MISC_ENABLE);
+        LOG("%s: 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_MISC_ENABLE);
     }
 }
 
@@ -285,9 +285,9 @@ void CPUTune::disableTurboBoost()
     // flip bit 38 to 1
     const uint64_t val = cur | kDisableTurboBoostBits;
     if (setIfNotEqual(cur, val, MSR_IA32_MISC_ENABLE)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", __func__, cur, val, MSR_IA32_MISC_ENABLE);
+        LOG("%s: change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", __func__, cur, val, MSR_IA32_MISC_ENABLE);
     } else {
-        myLOG("%s: 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_MISC_ENABLE);
+        LOG("%s: 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_MISC_ENABLE);
     }
 }
 
@@ -296,9 +296,9 @@ void CPUTune::disableProcHot()
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     const uint64_t val = cur & kDisableProcHotBit;
     if (setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__,cur, val, MSR_IA32_POWER_CTL);
+        LOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__,cur, val, MSR_IA32_POWER_CTL);
     } else {
-        myLOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
+        LOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
     }
 }
 
@@ -307,9 +307,9 @@ void CPUTune::enableProcHot()
     const uint64_t cur = rdmsr64(MSR_IA32_POWER_CTL);
     const uint64_t val = cur | kEnableProcHotBit;
     if(setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__, cur, val, MSR_IA32_POWER_CTL);
+        LOG("%s: change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", __func__, cur, val, MSR_IA32_POWER_CTL);
     } else {
-        myLOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
+        LOG("%s: 0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", __func__, cur, MSR_IA32_POWER_CTL);
     }
 }
 
@@ -317,9 +317,9 @@ void CPUTune::enableSpeedShift()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_PM_ENABLE);
     if (setIfNotEqual(cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", __func__, cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
+        LOG("%s: change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", __func__, cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
     } else {
-        myLOG("%s: 0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_PM_ENABLE);
+        LOG("%s: 0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_PM_ENABLE);
     }
 }
 
@@ -327,9 +327,9 @@ void CPUTune::disableSpeedShift()
 {
     const uint64_t cur = rdmsr64(MSR_IA32_PM_ENABLE);
     if (setIfNotEqual(cur, kDisableSpeedShiftBit, MSR_IA32_PM_ENABLE)) {
-        myLOG("%s: change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", __func__, cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
+        LOG("%s: change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", __func__, cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
     } else {
-        myLOG("%s: 0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_PM_ENABLE);
+        LOG("%s: 0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", __func__, cur, MSR_IA32_PM_ENABLE);
     }
 }
 
@@ -346,24 +346,24 @@ void CPUTune::stop(IOService *provider)
     // restore the previous MSR_IA32 state
     const uint64_t cur_ctk = rdmsr64(MSR_IA32_POWER_CTL);
     if (setIfNotEqual(cur_ctk, org_MSR_IA32_POWER_CTL, MSR_IA32_POWER_CTL)) {
-        myLOG("stop: restore MSR_IA32_POWER_CTK from 0x%llx to 0x%llx", cur_ctk, org_MSR_IA32_POWER_CTL);
+        LOG("stop: restore MSR_IA32_POWER_CTK from 0x%llx to 0x%llx", cur_ctk, org_MSR_IA32_POWER_CTL);
     }
     const uint64_t cur_misc = rdmsr64(MSR_IA32_MISC_ENABLE);
     if (setIfNotEqual(cur_misc, org_MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE)) {
-        myLOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", cur_misc, org_MSR_IA32_MISC_ENABLE);
+        LOG("stop: restore MSR_IA32_MISC_ENABLE from 0x%llx to 0x%llx", cur_misc, org_MSR_IA32_MISC_ENABLE);
     }
     const uint64_t cur_perf_ctl = rdmsr64(MSR_IA32_PERF_CTL);
     if (setIfNotEqual(cur_perf_ctl, org_MSR_IA32_PERF_CTL, MSR_IA32_PERF_CTL)) {
-        myLOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", cur_perf_ctl, org_MSR_IA32_PERF_CTL);
+        LOG("stop: restore MSR_IA32_PERF_CTL from 0x%llx to 0x%llx", cur_perf_ctl, org_MSR_IA32_PERF_CTL);
     }
     if (cpu_info.supportedHWP) {
         const uint64_t cur_pm_enable = rdmsr64(MSR_IA32_PM_ENABLE);
         if (setIfNotEqual(cur_pm_enable, org_MSR_IA32_PM_ENABLE, MSR_IA32_PM_ENABLE)) {
-            myLOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", cur_pm_enable, org_MSR_IA32_PM_ENABLE);
+            LOG("stop: restore MSR_IA32_PM_ENABLE from 0x%llx to 0x%llx", cur_pm_enable, org_MSR_IA32_PM_ENABLE);
         }
         const uint64_t cur_hwp_req = rdmsr64(MSR_IA32_HWP_REQUEST);
         if (setIfNotEqual(cur_hwp_req, org_HWPRequest, MSR_IA32_HWP_REQUEST)) {
-            myLOG("%s: restore MSR_IA32_HWP_REQUEST(0x%llx) from 0x%llx to 0x%llx", __func__, cur_hwp_req, org_HWPRequest);
+            LOG("%s: restore MSR_IA32_HWP_REQUEST(0x%llx) from 0x%llx to 0x%llx", __func__, cur_hwp_req, org_HWPRequest);
         }
     }
     super::stop(provider);
