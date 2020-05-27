@@ -10,7 +10,6 @@
 
 #include "kern_util.hpp"
 #include <i386/cpuid.h>
-#include <i386/proc_reg.h>
 /* Copied from xnu/osfmk/cpuid.c (modified for 64-bit values) */
 #define bit(n)                 (1UL << (n))
 #define bitmask64(h, l)        ((bit(h) | (bit(h) - 1)) & ~ (bit(l) - 1))

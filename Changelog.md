@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.0.9
+
+- Remove unused header in CPUInfo's header; bump to the right version
+
 #### v2.0.8
 
 - Check turbo rate limit RW/RO before writting to MSR
