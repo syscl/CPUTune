@@ -118,7 +118,7 @@ bool CPUTune::start(IOService *provider)
         return false;
     }
     
-    timerSource->setTimeoutMS(2000);
+    timerSource->setTimeoutMS(updateInterval);
     
     // check if we need to enable Intel Turbo Boost
     if (enableIntelTurboBoost) {

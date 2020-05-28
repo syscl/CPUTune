@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.1.1
+
+- Fixed timer sounce timeout in ```CPUTune::start```
+
 #### v2.1.0
 
 - Introduce ```DBGLOG()``` macro to reduce the log noise
