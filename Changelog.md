@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.1.3
+
+- Add line number, better code style for LOG and DBGLOG
+
 #### v2.1.2
 
 - Better logging with function name, more readable
