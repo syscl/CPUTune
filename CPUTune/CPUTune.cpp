@@ -24,6 +24,7 @@ IOService *CPUTune::probe(IOService *provider, SInt32 *score) {
 
 bool CPUTune::init(OSDictionary *dict)
 {
+    LOG("CPUTune: v%s starting on macOS Darwin %d.%d.", kmod_info.version, getKernelVersion(), getKernelMinorVersion());
     if (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta)) {
         LOG("Unsupported kernel version: %d, get a CPUTune that supports current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
         nvram.setKextPanicKey();
@@ -166,7 +167,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     if (turboBoostPath) {
         // check if previous turbo boost is enabled
         bool prev = rdmsr64(MSR_IA32_MISC_ENABLE) == (org_MSR_IA32_MISC_ENABLE & kEnableTurboBoostBits);
-        uint8_t *buffer = readFileNBytes(turboBoostPath, 0, 1);
+        uint8_t *buffer = readFileAsBytes(turboBoostPath, 0, 1);
         // check if currently request enable turbo boost
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
@@ -185,7 +186,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     // Turbo ratio limit
     if ((rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits) && cpu_info.turboRatioLimitRW && turboRatioLimitConfigPath) {
         size_t valid_length = cpu_info.coreCount * 2 + 2; // +2 for '0x'/'0X'
-        if (uint8_t* config = readFileNBytes(turboRatioLimitConfigPath, 0, valid_length)) {
+        if (uint8_t* config = readFileAsBytes(turboRatioLimitConfigPath, 0, valid_length)) {
             long limit = hexToInt(reinterpret_cast<char*>(config));
             deleter(config);
             if (limit == ERANGE) {
@@ -202,7 +203,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
 
     if (ProcHotPath) {
         bool prev = rdmsr64(MSR_IA32_POWER_CTL) & kEnableProcHotBit;
-        uint8_t *buffer = readFileNBytes(ProcHotPath, 0, 1);
+        uint8_t *buffer = readFileAsBytes(ProcHotPath, 0, 1);
         // check if currently request enable ProcHot
         bool curr = buffer && (*buffer == '1');
         // deallocate the buffer
@@ -222,7 +223,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     
     // set hwp request value if hwp is enable
     if (cpu_info.supportedHWP && hwpRequestConfigPath) {
-        if (uint8_t *hex = readFileNBytes(hwpRequestConfigPath, 0, 10)) {
+        if (uint8_t *hex = readFileAsBytes(hwpRequestConfigPath, 0, 10)) {
             // hex is not NULL means the hwp request config exist
             // let's check if the hex is valid before writing to MSR
             long req = hexToInt(reinterpret_cast<char*>(hex));
@@ -242,7 +243,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     if (!hwpEnableOnceSet && cpu_info.supportedHWP && speedShiftPath) {
         // check if previous speed shift is enabled
         bool prev = rdmsr64(MSR_IA32_PM_ENABLE) == kEnableSpeedShiftBit;
-        uint8_t *buffer = readFileNBytes(speedShiftPath, 0, 1);
+        uint8_t *buffer = readFileAsBytes(speedShiftPath, 0, 1);
         // check if currently request enable speed shift
         bool curr = buffer && (*buffer == '1');
         if (buffer && curr != prev) {

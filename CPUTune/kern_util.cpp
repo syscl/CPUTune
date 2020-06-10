@@ -77,7 +77,7 @@ int readFileData(void *buffer, off_t off, size_t size, vnode_t vnode, vfs_contex
     return error;
 }
 
-uint8_t *readFileNBytes(const char* path, off_t off, size_t bytes) {
+uint8_t *readFileAsBytes(const char* path, off_t off, size_t bytes) {
     vnode_t vnode = NULLVP;
     vfs_context_t ctx = vfs_context_create(nullptr);
     

@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.1.4
+
+- Add version info for CPUTune; rename readFileNBytes to readFileAsBytes 
+
 #### v2.1.3
 
 - Add line number, better code style for LOG and DBGLOG
