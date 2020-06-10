@@ -40,7 +40,8 @@ extern uint32_t ADDPR(debugPrintDelay);
  */
 #define LOG(str, ...)                                                                            \
     do {                                                                                         \
-        cputune_os_log("CPUTune @ " str "\n", ## __VA_ARGS__);                                   \
+        cputune_os_log(__func__);                                                                \
+        cputune_os_log(": " str "\n", ## __VA_ARGS__);                                           \
     } while (0)
 
 /**
@@ -51,7 +52,9 @@ extern uint32_t ADDPR(debugPrintDelay);
 #if DEBUG
 #define DBGLOG(str, ...)                                                                        \
     do {                                                                                        \
-        cputune_os_log("DEBUG: CPUTune @ " str "\n", ## __VA_ARGS__);                           \
+        cputune_os_log("DEBUG: ");                                                              \
+        cputune_os_log(__func__);                                                               \
+        cputune_os_log(": " str "\n", ## __VA_ARGS__);                                          \
     } while (0)
 #else
 #define DBGLOG(str, ...) do {} while(0)

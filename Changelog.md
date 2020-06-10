@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.1.2
+
+- Better logging with function name, more readable
+
 #### v2.1.1
 
 - Fixed timer sounce timeout in ```CPUTune::start```

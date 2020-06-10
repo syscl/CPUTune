@@ -26,25 +26,25 @@ errno_t writeBufferToFile(const char *path, char *buffer) {
     
     if (ctxt) {
         if ((err = vnode_open(path, fmode, cmode, VNODE_LOOKUP_NOFOLLOW, &vp, ctxt))) {
-            LOG("writeBufferToFile: vnode_open(%s) failed with error %d!\n", path, err);
+            LOG("vnode_open(%s) failed with error %d!", path, err);
         } else {
             if ((err = vnode_isreg(vp)) == VREG) {
                 if ((err = vn_rdwr(UIO_WRITE, vp, buffer, length, logFileOffset, UIO_SYSSPACE, IO_NOCACHE|IO_NODELOCKED|IO_UNIT, vfs_context_ucred(ctxt), (int *) 0, vfs_context_proc(ctxt)))) {
-                    LOG("writeBufferToFile: vn_rdwr(%s) failed with error %d!\n", path, err);
+                    LOG("vn_rdwr(%s) failed with error %d!", path, err);
                 } else {
                     logFileOffset += length;
                 }
             } else {
-                LOG("writeBufferToFile: vnode_isreg(%s) failed with error %d!\n", path, err);
+                LOG("vnode_isreg(%s) failed with error %d!", path, err);
             }
             
             if ((err = vnode_close(vp, FWASWRITTEN, ctxt))) {
-                LOG("writeBufferToFile: vnode_close(%s) failed with error %d!\n", path, err);
+                LOG("vnode_close(%s) failed with error %d!", path, err);
             }
         }
         vfs_context_rele(ctxt);
     } else {
-        LOG("writeBufferToFile: cannot obtain ctxt!\n");
+        LOG("cannot obtain ctxt!");
         err = 0xFFFF;
     }
     

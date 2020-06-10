@@ -40,7 +40,7 @@ public:
         supportedHWP(supportedSpeedShift()),
         coreCount(getCoreCount()),
         turboRatioLimitRW(getTurboRatioLimitRW()) {
-        LOG("CPUInfo: cpu model: 0x%x, %s HWP, number of cores: %d, turbo ratio limit permission: %s",
+        LOG("cpu model: 0x%x, %s HWP, number of cores: %d, turbo ratio limit permission: %s",
               model,
               (supportedHWP ? "supported" : "unsupported"),
               coreCount,
