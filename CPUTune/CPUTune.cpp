@@ -24,14 +24,14 @@ IOService *CPUTune::probe(IOService *provider, SInt32 *score) {
 
 bool CPUTune::init(OSDictionary *dict)
 {
-    LOG("CPUTune: v%s starting on macOS Darwin %d.%d.", kmod_info.version, getKernelVersion(), getKernelMinorVersion());
+    LOG("CPUTune(%s) starting on macOS Darwin %d.%d.", kmod_info.version, getKernelVersion(), getKernelMinorVersion());
     if (getKernelVersion() >= KernelVersion::Unsupported && !checkKernelArgument(bootargBeta)) {
         LOG("Unsupported kernel version: %d, get a CPUTune that supports current kernel from https://github.com/syscl/CPUTune", getKernelVersion());
         nvram.setKextPanicKey();
         return false;
     } else if (nvram.isKextPanicLastBoot()) {
         // clear the panic key
-        LOG("Found % key being set in NVRAM, CPUTune (%s) supportted kernel version %d, clear the panic key", kCPUTUNE_PANIC_KEY, kextVersion, getKernelVersion());
+        LOG("Found %s key being set in NVRAM, CPUTune(%s) supportted kernel version %d, clear the panic key", kCPUTUNE_PANIC_KEY, kmod_info.version, getKernelVersion());
         nvram.clearKextPanicKey();
     }
     
@@ -233,9 +233,9 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
             } else {
                 uint64_t curHWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
                 uint64_t usrHWPRequest = static_cast<uint64_t>(req);
-               if (setIfNotEqual(curHWPRequest, usrHWPRequest, MSR_IA32_HWP_REQUEST)) {
-                   LOG("change MSR_IA32_HWP_REQUEST(0x%llx): 0x%llx -> 0x%llx", MSR_IA32_HWP_REQUEST, curHWPRequest, usrHWPRequest);
-               }
+                if (setIfNotEqual(curHWPRequest, usrHWPRequest, MSR_IA32_HWP_REQUEST)) {
+                    LOG("change MSR_IA32_HWP_REQUEST(0x%llx): 0x%llx -> 0x%llx", MSR_IA32_HWP_REQUEST, curHWPRequest, usrHWPRequest);
+                }
             }
         }
     }
