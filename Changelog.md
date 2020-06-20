@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v 2.1.7
+
+- Fixed the kernel panic at boostrap due to write log to filesystem
+
 #### v 2.1.6
 
 - Fixed a kernel panic that reads MSR_IA32_HWP_REQUEST on CPUs unsupport HWP

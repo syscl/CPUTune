@@ -129,8 +129,9 @@ void cputune_os_log(const char *format, ...) {
     if (ml_get_interrupts_enabled())
         IOLog("%s", tmp);
     
-#if DEBUG
+#if (DEBUG && DEBUG_AFTER_BOOTSTRAP)
     // Write log to path
+    // Note we cannot write the log at bootstrap which will cause kernel panic
     const char *path = "/var/log/cputune.kext.log";
     writeBufferToFile(path, tmp);
 #endif /* DEBUG */

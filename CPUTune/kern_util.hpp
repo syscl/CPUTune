@@ -17,6 +17,9 @@
 #define xConcat(a, b) Concat(a, b)
 #define Concat(a, b) a ## b
 
+// Change it when you want to get the debug log on disk
+#define DEBUG_AFTER_BOOTSTRAP 0
+
 /**
  *  Prefix name with your plugin name (to ease symbolication and avoid conflicts)
  */
