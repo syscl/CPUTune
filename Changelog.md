@@ -1,5 +1,13 @@
 CPUTune Changelog
 =======================
+#### v 2.1.6
+
+- Fixed a kernel panic that reads MSR_IA32_HWP_REQUEST on CPUs unsupport HWP
+
+#### v2.1.5
+
+- Fixed the NVRAM log string buffer
+
 #### v2.1.4
 
 - Add version info for CPUTune; rename readFileNBytes to readFileAsBytes 

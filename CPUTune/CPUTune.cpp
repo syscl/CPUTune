@@ -70,7 +70,10 @@ bool CPUTune::init(OSDictionary *dict)
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
     org_MSR_IA32_POWER_CTL = rdmsr64(MSR_IA32_POWER_CTL);
-    org_HWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
+    if (cpu_info.supportedHWP) {
+        // Do not read MSR_IA32_HWP_REQUEST on unsupported HWP's CPU (otherwise will cause panic)
+        org_HWPRequest = rdmsr64(MSR_IA32_HWP_REQUEST);
+    }
     org_TurboRatioLimit = rdmsr64(MSR_TURBO_RATIO_LIMIT);
     
     return ret;
