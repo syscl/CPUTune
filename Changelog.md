@@ -1,5 +1,11 @@
 CPUTune Changelog
 =======================
+#### v2.2.0
+
+- Fixed return status in start()
+- Reverted to less aggressive MSR writters with null pointer protection
+- Removed redudant log in setIfNotEqual
+
 #### v2.1.9
 
 - Fixed some nits
@@ -175,7 +181,7 @@ CPUTune Changelog
 - Unsupported version check 
 - Fixed memeory leak
 
-#### v 1.0.1
+#### v1.0.1
 - Fixed enableTurboBoost().
 
 #### v1.0.0

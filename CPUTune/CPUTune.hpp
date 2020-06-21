@@ -49,10 +49,7 @@ private:
     static constexpr uint64_t kDisableProcHotBit = 0xFFFFFFFE;
     static constexpr uint64_t kEnableProcHotBit = 0x1;
     
-    typedef void (*MSRWriter)(void);
-    typedef void (CPUTune::*MSRWriterCallback)(void);
-    void writeConfigToMSR(const char*, MSRWriterCallback, MSRWriterCallback) const;
-    
+
     IOWorkLoop *myWorkLoop;
     IOTimerEventSource *timerSource;
     void readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender);

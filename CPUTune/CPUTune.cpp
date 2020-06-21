@@ -42,10 +42,9 @@ bool CPUTune::init(OSDictionary *dict)
         LOG("not allow to run.");
         return false;
     }
-    bool ret = super::init(dict);
-    if (!ret) {
-        LOG("failed!");
-        return ret;
+    if (!super::init(dict)) {
+        LOG("super init failed!");
+        return false;
     }
     
     // get string properties
@@ -65,8 +64,6 @@ bool CPUTune::init(OSDictionary *dict)
         LOG("Update time interval %u ms per cycle", updateInterval);
     }
     
-    LOG("succeeded!");
-    
     org_MSR_IA32_MISC_ENABLE = rdmsr64(MSR_IA32_MISC_ENABLE);
     org_MSR_IA32_PERF_CTL = rdmsr64(MSR_IA32_PERF_CTL);
     org_MSR_IA32_POWER_CTL = rdmsr64(MSR_IA32_POWER_CTL);
@@ -76,7 +73,8 @@ bool CPUTune::init(OSDictionary *dict)
     }
     org_TurboRatioLimit = rdmsr64(MSR_TURBO_RATIO_LIMIT);
     
-    return ret;
+    LOG("succeeded!");
+    return true;
 }
 
 const char* CPUTune::getStringPropertyOrElse(const char* key, const char* defaultProperty) const {
@@ -95,10 +93,9 @@ const bool CPUTune::getBooleanOrElse(const char* key, const bool defaultValue) c
 
 bool CPUTune::start(IOService *provider)
 {
-    bool ret = super::start(provider);
-    if (!ret || provider == nullptr) {
+    if (!super::start(provider) || provider == nullptr) {
         LOG("cannot start provider or provider does not exist.");
-        return ret;
+        return false;
     }
     
     // let's turn off some of the SIP bits so that we can debug it easily on a real mac
@@ -153,18 +150,7 @@ bool CPUTune::start(IOService *provider)
     
     LOG("registerService");
     registerService();
-    return ret;
-}
-
-void CPUTune::writeConfigToMSR(const char *config, MSRWriterCallback enabler, MSRWriterCallback disabler) const {
-    if (uint8_t* buffer = readFileAsBytes(config, 0, 1)) {
-        bool enabled = *buffer == '1';
-        deleter(buffer);
-        MSRWriter writer = OSMemberFunctionCast(MSRWriter, this, (enabled ? enabler : disabler));
-        writer();
-    } else {
-        // No config for the writer at runtime, leave it as it is
-    }
+    return true;
 }
 
 void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
@@ -177,7 +163,14 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     // As for now, the reading procedure reads only one byte, which is fairly fast in our case, so we assume
     // this routine will not cause infinite blocking. Let me know if you have some other good ideas.
     if (turboBoostPath) {
-        writeConfigToMSR(turboBoostPath, &CPUTune::enableTurboBoost, &CPUTune::disableTurboBoost);
+        if (uint8_t *buffer = readFileAsBytes(turboBoostPath, 0, 1)) {
+            if (*buffer == '1') {
+                enableTurboBoost();
+            } else {
+                disableTurboBoost();
+            }
+            deleter(buffer);
+        }
     }
     
     // Turbo ratio limit
@@ -199,7 +192,14 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     }
 
     if (ProcHotPath) {
-        writeConfigToMSR(ProcHotPath, &CPUTune::enableProcHot, &CPUTune::disableProcHot);
+        if (uint8_t *buffer = readFileAsBytes(ProcHotPath, 0, 1)) {
+            if (*buffer == '1') {
+                enableProcHot();
+            } else {
+                disableProcHot();
+            }
+            deleter(buffer);
+        }
     }
     
     // set hwp request value if hwp is enable
@@ -222,7 +222,14 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     }
     
     if (!hwpEnableOnceSet && cpu_info.supportedHWP && speedShiftPath) {
-        writeConfigToMSR(speedShiftPath, &CPUTune::enableSpeedShift, &CPUTune::disableSpeedShift);
+        if (uint8_t *buffer = readFileAsBytes(speedShiftPath, 0, 1)) {
+            if (*buffer == '1') {
+                enableSpeedShift();
+            } else {
+                disableSpeedShift();
+            }
+            deleter(buffer);
+        }
     }
     sender->setTimeoutMS(updateInterval);
 }
@@ -242,8 +249,6 @@ void CPUTune::enableTurboBoost()
     const uint64_t val = cur & kEnableTurboBoostBits;
     if (setIfNotEqual(cur, val, MSR_IA32_MISC_ENABLE)) {
         LOG("change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", cur, val, MSR_IA32_MISC_ENABLE);
-    } else {
-        LOG("0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", cur, MSR_IA32_MISC_ENABLE);
     }
 }
 
@@ -254,8 +259,6 @@ void CPUTune::disableTurboBoost()
     const uint64_t val = cur | kDisableTurboBoostBits;
     if (setIfNotEqual(cur, val, MSR_IA32_MISC_ENABLE)) {
         LOG("change 0x%llx to 0x%llx in MSR_IA32_MISC_ENABLE(0x%llx)", cur, val, MSR_IA32_MISC_ENABLE);
-    } else {
-        LOG("0x%llx in MSR_IA32_MISC_ENABLE(0x%llx) remains the same", cur, MSR_IA32_MISC_ENABLE);
     }
 }
 
@@ -265,8 +268,6 @@ void CPUTune::disableProcHot()
     const uint64_t val = cur & kDisableProcHotBit;
     if (setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
         LOG("change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", cur, val, MSR_IA32_POWER_CTL);
-    } else {
-        LOG("0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", cur, MSR_IA32_POWER_CTL);
     }
 }
 
@@ -276,8 +277,6 @@ void CPUTune::enableProcHot()
     const uint64_t val = cur | kEnableProcHotBit;
     if(setIfNotEqual(cur, val, MSR_IA32_POWER_CTL)) {
         LOG("change 0x%llx to 0x%llx in MSR_IA32_POWERCTL(0x%llx)", cur, val, MSR_IA32_POWER_CTL);
-    } else {
-        LOG("0x%llx in MSR_IA32_POWER_CTL(0x%llx) remains the same", cur, MSR_IA32_POWER_CTL);
     }
 }
 
@@ -286,8 +285,6 @@ void CPUTune::enableSpeedShift()
     const uint64_t cur = rdmsr64(MSR_IA32_PM_ENABLE);
     if (setIfNotEqual(cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE)) {
         LOG("change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
-    } else {
-        LOG("0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", cur, MSR_IA32_PM_ENABLE);
     }
 }
 
@@ -296,8 +293,6 @@ void CPUTune::disableSpeedShift()
     const uint64_t cur = rdmsr64(MSR_IA32_PM_ENABLE);
     if (setIfNotEqual(cur, kDisableSpeedShiftBit, MSR_IA32_PM_ENABLE)) {
         LOG("change 0x%llx to 0x%llx in MSR_IA32_PM_ENABLE(0x%llx)", cur, kEnableSpeedShiftBit, MSR_IA32_PM_ENABLE);
-    } else {
-        LOG("0x%llx in MSR_IA32_PM_ENABLE(0x%llx) remains the same", cur, MSR_IA32_PM_ENABLE);
     }
 }
 
