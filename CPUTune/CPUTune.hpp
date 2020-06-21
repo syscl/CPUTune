@@ -51,7 +51,7 @@ private:
     
     typedef void (*MSRWriter)(void);
     typedef void (CPUTune::*MSRWriterCallback)(void);
-    void writeConfigToMSR(const char * config, MSRWriterCallback, MSRWriterCallback) const;
+    void writeConfigToMSR(const char*, MSRWriterCallback, MSRWriterCallback) const;
     
     IOWorkLoop *myWorkLoop;
     IOTimerEventSource *timerSource;

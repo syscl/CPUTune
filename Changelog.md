@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.1.9
+
+- Fixed some nits
+
 #### v2.1.8
 
 - Protected against null pointer

@@ -160,10 +160,10 @@ void CPUTune::writeConfigToMSR(const char *config, MSRWriterCallback enabler, MS
     if (uint8_t* buffer = readFileAsBytes(config, 0, 1)) {
         bool enabled = *buffer == '1';
         deleter(buffer);
-        MSRWriter callback = OSMemberFunctionCast(MSRWriter, this, (enabled ? enabler : disabler));
-        callback();
+        MSRWriter writer = OSMemberFunctionCast(MSRWriter, this, (enabled ? enabler : disabler));
+        writer();
     } else {
-        // No config for the writer at runtime, leave it as it it
+        // No config for the writer at runtime, leave it as it is
     }
 }
 
