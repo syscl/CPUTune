@@ -1,5 +1,11 @@
 CPUTune Changelog
 =======================
+#### v2.1.8
+
+- Protected against null pointer
+- Fixed the readConfigAtRuntime read and set logic (use setIfNotEqual)
+- Added Base to know region as new Xcode
+
 #### v 2.1.7
 
 - Fixed the kernel panic at boostrap due to write log to filesystem

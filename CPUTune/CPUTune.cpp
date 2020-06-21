@@ -134,10 +134,8 @@ bool CPUTune::start(IOService *provider)
     // make sure we disable ProcHot only if turboboost is disabled
     if (enableIntelProcHot) {
         enableProcHot();
-    } else if(!enableIntelTurboBoost) {
-        disableProcHot();
     } else {
-        LOG("cannot deactivate PROCHOT while turboboost is active!");
+        disableProcHot();
     }
     
     // check if we need to enable Intel Speed Shift on platform on Skylake+
@@ -158,6 +156,17 @@ bool CPUTune::start(IOService *provider)
     return ret;
 }
 
+void CPUTune::writeConfigToMSR(const char *config, MSRWriterCallback enabler, MSRWriterCallback disabler) const {
+    if (uint8_t* buffer = readFileAsBytes(config, 0, 1)) {
+        bool enabled = *buffer == '1';
+        deleter(buffer);
+        MSRWriter callback = OSMemberFunctionCast(MSRWriter, this, (enabled ? enabler : disabler));
+        callback();
+    } else {
+        // No config for the writer at runtime, leave it as it it
+    }
+}
+
 void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
 {
     // FIXME: As per Apple Document (https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/HandlingEvents/HandlingEvents.html#//apple_ref/doc/uid/TP0000018-BAJFFJAD Listing 7-5):
@@ -168,22 +177,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     // As for now, the reading procedure reads only one byte, which is fairly fast in our case, so we assume
     // this routine will not cause infinite blocking. Let me know if you have some other good ideas.
     if (turboBoostPath) {
-        // check if previous turbo boost is enabled
-        bool prev = rdmsr64(MSR_IA32_MISC_ENABLE) == (org_MSR_IA32_MISC_ENABLE & kEnableTurboBoostBits);
-        uint8_t *buffer = readFileAsBytes(turboBoostPath, 0, 1);
-        // check if currently request enable turbo boost
-        bool curr = buffer && (*buffer == '1');
-        // deallocate the buffer
-        deleter(buffer);
-        if (curr != prev) {
-            LOG("%s Intel Turbo Boost", curr ? "enable" : "disable");
-            if (curr) {
-                enableTurboBoost();
-            } else {
-                disableTurboBoost();
-
-            }
-        }
+        writeConfigToMSR(turboBoostPath, &CPUTune::enableTurboBoost, &CPUTune::disableTurboBoost);
     }
     
     // Turbo ratio limit
@@ -205,23 +199,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     }
 
     if (ProcHotPath) {
-        bool prev = rdmsr64(MSR_IA32_POWER_CTL) & kEnableProcHotBit;
-        uint8_t *buffer = readFileAsBytes(ProcHotPath, 0, 1);
-        // check if currently request enable ProcHot
-        bool curr = buffer && (*buffer == '1');
-        // deallocate the buffer
-        deleter(buffer);
-        if (curr != prev) {
-            LOG("%s Intel Proc Hot", curr ? "enable" : "disable");
-            if (curr) {
-                enableProcHot();
-            } else if((rdmsr64(MSR_IA32_MISC_ENABLE) & kEnableTurboBoostBits) != kEnableTurboBoostBits){
-                disableProcHot();
-            } else {
-                LOG("Cannot disable PROCHOT while turboboost is active!");
-            }
-                
-        }
+        writeConfigToMSR(ProcHotPath, &CPUTune::enableProcHot, &CPUTune::disableProcHot);
     }
     
     // set hwp request value if hwp is enable
@@ -244,21 +222,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     }
     
     if (!hwpEnableOnceSet && cpu_info.supportedHWP && speedShiftPath) {
-        // check if previous speed shift is enabled
-        bool prev = rdmsr64(MSR_IA32_PM_ENABLE) == kEnableSpeedShiftBit;
-        uint8_t *buffer = readFileAsBytes(speedShiftPath, 0, 1);
-        // check if currently request enable speed shift
-        bool curr = buffer && (*buffer == '1');
-        if (buffer && curr != prev) {
-            LOG("%s Intel Speed Shift", curr ? "enable" : "disable");
-            if (curr) {
-                enableSpeedShift();
-            } else {
-                disableSpeedShift();
-            }
-        }
-        // deallocate the buffer
-        deleter(buffer);
+        writeConfigToMSR(speedShiftPath, &CPUTune::enableSpeedShift, &CPUTune::disableSpeedShift);
     }
     sender->setTimeoutMS(updateInterval);
 }

@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1.7</string>
+	<string>2.1.8</string>
 	<key>CFBundleVersion</key>
-	<string>2.1.7</string>
+	<string>2.1.8</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>CPUTune</key>
@@ -47,7 +47,7 @@
 			<key>UpdateInterval</key>
 			<integer>1000</integer>
 			<key>EnableTurboBoost</key>
-			<false/>
+			<true/>
 			<key>EnableProcHot</key>
 			<false/>
 			<key>AllowUnrestrictedFS</key>
