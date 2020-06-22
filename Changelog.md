@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.2.1
+
+- Fixed a kernel panic when resart the timer in readConfigAtRuntime()
+
 #### v2.2.0
 
 - Fixed return status in start()
