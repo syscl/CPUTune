@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:CPUTuneCore"
+      name = "CPUTuneCore">
+      <FileRef
+         location = "group:Changelog.md">
+      </FileRef>
+      <FileRef
+         location = "group:README.md">
+      </FileRef>
+      <FileRef
+         location = "group:CPUTuneCore.xcodeproj">
+      </FileRef>
+      <Group
+         location = "group:CPUTune"
+         name = "CPUTune">
+         <FileRef
+            location = "group:CPUInfo.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:csr.h">
+         </FileRef>
+         <FileRef
+            location = "group:SIPTune.hpp">
+         </FileRef>
+         <FileRef
+            location = "group:NVRAMUtils.hpp">
+         </FileRef>
+         <FileRef
+            location = "group:kern_util.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:CPUTune.hpp">
+         </FileRef>
+         <FileRef
+            location = "group:CPUTune.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:CPUInfo.hpp">
+         </FileRef>
+         <FileRef
+            location = "group:SIPTune.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:NVRAMUtils.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:Info.plist">
+         </FileRef>
+         <FileRef
+            location = "group:kern_util.hpp">
+         </FileRef>
+      </Group>
+   </Group>
+   <Group
+      location = "group:CPUTuneApp"
+      name = "CPUTuneApp">
+      <FileRef
+         location = "group:CPUTuneApp.xcodeproj">
+      </FileRef>
+      <Group
+         location = "group:CPUTuneApp"
+         name = "CPUTuneApp">
+         <Group
+            location = "group:Assets.xcassets"
+            name = "Assets.xcassets">
+            <Group
+               location = "group:AppIcon.appiconset"
+               name = "AppIcon.appiconset">
+               <FileRef
+                  location = "group:Contents.json">
+               </FileRef>
+            </Group>
+            <FileRef
+               location = "group:Contents.json">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Preview Content"
+            name = "Preview Content">
+            <Group
+               location = "group:Preview Assets.xcassets"
+               name = "Preview Assets.xcassets">
+               <FileRef
+                  location = "group:Contents.json">
+               </FileRef>
+            </Group>
+         </Group>
+         <Group
+            location = "group:Base.lproj"
+            name = "Base.lproj">
+            <FileRef
+               location = "group:Main.storyboard">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:CPUTuneApp.entitlements">
+         </FileRef>
+         <FileRef
+            location = "group:AppDelegate.swift">
+         </FileRef>
+         <FileRef
+            location = "group:ContentView.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Info.plist">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:CPUTuneAppUITests"
+         name = "CPUTuneAppUITests">
+         <FileRef
+            location = "group:CPUTuneAppUITests.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Info.plist">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:CPUTuneAppTests"
+         name = "CPUTuneAppTests">
+         <FileRef
+            location = "group:CPUTuneAppTests.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Info.plist">
+         </FileRef>
+      </Group>
+   </Group>
+</Workspace>
