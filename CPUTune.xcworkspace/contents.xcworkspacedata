@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <FileRef
+      location = "group:/Users/syscl/git/CPUTune/Changelog.md">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/syscl/git/CPUTune/README.md">
+   </FileRef>
    <Group
       location = "group:CPUTuneCore"
       name = "CPUTuneCore">
-      <FileRef
-         location = "group:Changelog.md">
-      </FileRef>
-      <FileRef
-         location = "group:README.md">
-      </FileRef>
       <FileRef
          location = "group:CPUTuneCore.xcodeproj">
       </FileRef>
