@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.2.2
+
+- Renamed CPUTune.kext to CPUTuneCore.kext
+
 #### v2.2.1
 
 - Fixed a kernel panic when resart the timer in readConfigAtRuntime()

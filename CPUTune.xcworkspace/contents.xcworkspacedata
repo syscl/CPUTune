@@ -2,10 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/syscl/git/CPUTune/Changelog.md">
+      location = "group:/Users/syscl/git/CPUTune/README.md">
    </FileRef>
    <FileRef
-      location = "group:/Users/syscl/git/CPUTune/README.md">
+      location = "group:/Users/syscl/git/CPUTune/Changelog.md">
    </FileRef>
    <Group
       location = "group:CPUTuneCore"
