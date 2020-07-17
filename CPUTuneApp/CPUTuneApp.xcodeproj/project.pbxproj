@@ -1,0 +1,594 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E8E1903624B275D50067C47C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1903524B275D50067C47C /* AppDelegate.swift */; };
+		E8E1903824B275D50067C47C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1903724B275D50067C47C /* ContentView.swift */; };
+		E8E1903A24B275D60067C47C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8E1903924B275D60067C47C /* Assets.xcassets */; };
+		E8E1903D24B275D60067C47C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8E1903C24B275D60067C47C /* Preview Assets.xcassets */; };
+		E8E1904024B275D60067C47C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8E1903E24B275D60067C47C /* Main.storyboard */; };
+		E8E1904C24B275D60067C47C /* CPUTuneAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1904B24B275D60067C47C /* CPUTuneAppTests.swift */; };
+		E8E1905724B275D60067C47C /* CPUTuneAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1905624B275D60067C47C /* CPUTuneAppUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E8E1904824B275D60067C47C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E8E1902A24B275D50067C47C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8E1903124B275D50067C47C;
+			remoteInfo = CPUTuneApp;
+		};
+		E8E1905324B275D60067C47C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E8E1902A24B275D50067C47C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8E1903124B275D50067C47C;
+			remoteInfo = CPUTuneApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E8E1903224B275D50067C47C /* CPUTuneApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CPUTuneApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8E1903524B275D50067C47C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E8E1903724B275D50067C47C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E8E1903924B275D60067C47C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E8E1903C24B275D60067C47C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E8E1903F24B275D60067C47C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E8E1904124B275D60067C47C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E8E1904224B275D60067C47C /* CPUTuneApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CPUTuneApp.entitlements; sourceTree = "<group>"; };
+		E8E1904724B275D60067C47C /* CPUTuneAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTuneAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8E1904B24B275D60067C47C /* CPUTuneAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUTuneAppTests.swift; sourceTree = "<group>"; };
+		E8E1904D24B275D60067C47C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E8E1905224B275D60067C47C /* CPUTuneAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTuneAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8E1905624B275D60067C47C /* CPUTuneAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUTuneAppUITests.swift; sourceTree = "<group>"; };
+		E8E1905824B275D60067C47C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E8E1902F24B275D50067C47C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8E1904424B275D60067C47C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8E1904F24B275D60067C47C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E8E1902924B275D50067C47C = {
+			isa = PBXGroup;
+			children = (
+				E8E1903424B275D50067C47C /* CPUTuneApp */,
+				E8E1904A24B275D60067C47C /* CPUTuneAppTests */,
+				E8E1905524B275D60067C47C /* CPUTuneAppUITests */,
+				E8E1903324B275D50067C47C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E8E1903324B275D50067C47C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E8E1903224B275D50067C47C /* CPUTuneApp.app */,
+				E8E1904724B275D60067C47C /* CPUTuneAppTests.xctest */,
+				E8E1905224B275D60067C47C /* CPUTuneAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E8E1903424B275D50067C47C /* CPUTuneApp */ = {
+			isa = PBXGroup;
+			children = (
+				E8E1903524B275D50067C47C /* AppDelegate.swift */,
+				E8E1903724B275D50067C47C /* ContentView.swift */,
+				E8E1903924B275D60067C47C /* Assets.xcassets */,
+				E8E1903E24B275D60067C47C /* Main.storyboard */,
+				E8E1904124B275D60067C47C /* Info.plist */,
+				E8E1904224B275D60067C47C /* CPUTuneApp.entitlements */,
+				E8E1903B24B275D60067C47C /* Preview Content */,
+			);
+			path = CPUTuneApp;
+			sourceTree = "<group>";
+		};
+		E8E1903B24B275D60067C47C /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				E8E1903C24B275D60067C47C /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		E8E1904A24B275D60067C47C /* CPUTuneAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				E8E1904B24B275D60067C47C /* CPUTuneAppTests.swift */,
+				E8E1904D24B275D60067C47C /* Info.plist */,
+			);
+			path = CPUTuneAppTests;
+			sourceTree = "<group>";
+		};
+		E8E1905524B275D60067C47C /* CPUTuneAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E8E1905624B275D60067C47C /* CPUTuneAppUITests.swift */,
+				E8E1905824B275D60067C47C /* Info.plist */,
+			);
+			path = CPUTuneAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E8E1903124B275D50067C47C /* CPUTuneApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E8E1905B24B275D60067C47C /* Build configuration list for PBXNativeTarget "CPUTuneApp" */;
+			buildPhases = (
+				E8E1902E24B275D50067C47C /* Sources */,
+				E8E1902F24B275D50067C47C /* Frameworks */,
+				E8E1903024B275D50067C47C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CPUTuneApp;
+			productName = CPUTuneApp;
+			productReference = E8E1903224B275D50067C47C /* CPUTuneApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E8E1904624B275D60067C47C /* CPUTuneAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E8E1905E24B275D60067C47C /* Build configuration list for PBXNativeTarget "CPUTuneAppTests" */;
+			buildPhases = (
+				E8E1904324B275D60067C47C /* Sources */,
+				E8E1904424B275D60067C47C /* Frameworks */,
+				E8E1904524B275D60067C47C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E8E1904924B275D60067C47C /* PBXTargetDependency */,
+			);
+			name = CPUTuneAppTests;
+			productName = CPUTuneAppTests;
+			productReference = E8E1904724B275D60067C47C /* CPUTuneAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E8E1905124B275D60067C47C /* CPUTuneAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E8E1906124B275D60067C47C /* Build configuration list for PBXNativeTarget "CPUTuneAppUITests" */;
+			buildPhases = (
+				E8E1904E24B275D60067C47C /* Sources */,
+				E8E1904F24B275D60067C47C /* Frameworks */,
+				E8E1905024B275D60067C47C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E8E1905424B275D60067C47C /* PBXTargetDependency */,
+			);
+			name = CPUTuneAppUITests;
+			productName = CPUTuneAppUITests;
+			productReference = E8E1905224B275D60067C47C /* CPUTuneAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E8E1902A24B275D50067C47C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1150;
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = syscl;
+				TargetAttributes = {
+					E8E1903124B275D50067C47C = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					E8E1904624B275D60067C47C = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = E8E1903124B275D50067C47C;
+					};
+					E8E1905124B275D60067C47C = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = E8E1903124B275D50067C47C;
+					};
+				};
+			};
+			buildConfigurationList = E8E1902D24B275D50067C47C /* Build configuration list for PBXProject "CPUTuneApp" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E8E1902924B275D50067C47C;
+			productRefGroup = E8E1903324B275D50067C47C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E8E1903124B275D50067C47C /* CPUTuneApp */,
+				E8E1904624B275D60067C47C /* CPUTuneAppTests */,
+				E8E1905124B275D60067C47C /* CPUTuneAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E8E1903024B275D50067C47C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E1904024B275D60067C47C /* Main.storyboard in Resources */,
+				E8E1903D24B275D60067C47C /* Preview Assets.xcassets in Resources */,
+				E8E1903A24B275D60067C47C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8E1904524B275D60067C47C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8E1905024B275D60067C47C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E8E1902E24B275D50067C47C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E1903824B275D50067C47C /* ContentView.swift in Sources */,
+				E8E1903624B275D50067C47C /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8E1904324B275D60067C47C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E1904C24B275D60067C47C /* CPUTuneAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8E1904E24B275D60067C47C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E1905724B275D60067C47C /* CPUTuneAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E8E1904924B275D60067C47C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E8E1903124B275D50067C47C /* CPUTuneApp */;
+			targetProxy = E8E1904824B275D60067C47C /* PBXContainerItemProxy */;
+		};
+		E8E1905424B275D60067C47C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E8E1903124B275D50067C47C /* CPUTuneApp */;
+			targetProxy = E8E1905324B275D60067C47C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E8E1903E24B275D60067C47C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E8E1903F24B275D60067C47C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E8E1905924B275D60067C47C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E8E1905A24B275D60067C47C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		E8E1905C24B275D60067C47C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CPUTuneApp/CPUTuneApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"CPUTuneApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CPUTuneApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = org.syscl.driver.CPUTuneApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E8E1905D24B275D60067C47C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CPUTuneApp/CPUTuneApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"CPUTuneApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CPUTuneApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = org.syscl.driver.CPUTuneApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E8E1905F24B275D60067C47C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CPUTuneAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = org.syscl.driver.CPUTuneAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CPUTuneApp.app/Contents/MacOS/CPUTuneApp";
+			};
+			name = Debug;
+		};
+		E8E1906024B275D60067C47C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CPUTuneAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = org.syscl.driver.CPUTuneAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CPUTuneApp.app/Contents/MacOS/CPUTuneApp";
+			};
+			name = Release;
+		};
+		E8E1906224B275D60067C47C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CPUTuneAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.syscl.driver.CPUTuneAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CPUTuneApp;
+			};
+			name = Debug;
+		};
+		E8E1906324B275D60067C47C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CPUTuneAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.syscl.driver.CPUTuneAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CPUTuneApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E8E1902D24B275D50067C47C /* Build configuration list for PBXProject "CPUTuneApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E8E1905924B275D60067C47C /* Debug */,
+				E8E1905A24B275D60067C47C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E8E1905B24B275D60067C47C /* Build configuration list for PBXNativeTarget "CPUTuneApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E8E1905C24B275D60067C47C /* Debug */,
+				E8E1905D24B275D60067C47C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E8E1905E24B275D60067C47C /* Build configuration list for PBXNativeTarget "CPUTuneAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E8E1905F24B275D60067C47C /* Debug */,
+				E8E1906024B275D60067C47C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E8E1906124B275D60067C47C /* Build configuration list for PBXNativeTarget "CPUTuneAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E8E1906224B275D60067C47C /* Debug */,
+				E8E1906324B275D60067C47C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E8E1902A24B275D50067C47C /* Project object */;
+}

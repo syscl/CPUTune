@@ -12,7 +12,7 @@
 #include <stddef.h>
 #include <IOKit/IONVRAM.h>
 
-static constexpr char kCPUTUNE_PANIC_KEY[] = "cpu-tune-panic";
+static constexpr char kCPUTUNE_PANIC_KEY[] = "cputune-panic";
 
 class NVRAMUtils {
 public:

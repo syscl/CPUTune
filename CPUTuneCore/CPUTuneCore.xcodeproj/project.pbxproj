@@ -14,8 +14,6 @@
 		E811BF7221AB1B44001BFDC2 /* SIPTune.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E811BF7021AB1B44001BFDC2 /* SIPTune.hpp */; };
 		E819949921A90DC00019C605 /* CPUInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E819949721A90DC00019C605 /* CPUInfo.cpp */; };
 		E819949A21A90DC00019C605 /* CPUInfo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E819949821A90DC00019C605 /* CPUInfo.hpp */; };
-		E81A35CC21AA78C100A101FD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E81A35CB21AA78C100A101FD /* README.md */; };
-		E81A35CE21AA7B6F00A101FD /* Changelog.md in Resources */ = {isa = PBXBuildFile; fileRef = E81A35CD21AA7B6F00A101FD /* Changelog.md */; };
 		E827227A24276A2A0006E161 /* NVRAMUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E827227824276A2A0006E161 /* NVRAMUtils.cpp */; };
 		E827227B24276A2A0006E161 /* NVRAMUtils.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E827227924276A2A0006E161 /* NVRAMUtils.hpp */; };
 		E8D5861821A7BB1C001CCF6A /* CPUTune.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E8D5861721A7BB1C001CCF6A /* CPUTune.hpp */; };
@@ -30,11 +28,9 @@
 		E811BF7021AB1B44001BFDC2 /* SIPTune.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SIPTune.hpp; sourceTree = "<group>"; };
 		E819949721A90DC00019C605 /* CPUInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUInfo.cpp; sourceTree = "<group>"; };
 		E819949821A90DC00019C605 /* CPUInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInfo.hpp; sourceTree = "<group>"; };
-		E81A35CB21AA78C100A101FD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		E81A35CD21AA7B6F00A101FD /* Changelog.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Changelog.md; sourceTree = SOURCE_ROOT; };
 		E827227824276A2A0006E161 /* NVRAMUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NVRAMUtils.cpp; sourceTree = "<group>"; };
 		E827227924276A2A0006E161 /* NVRAMUtils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NVRAMUtils.hpp; sourceTree = "<group>"; };
-		E8D5861421A7BB1C001CCF6A /* CPUTune.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTune.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8D5861421A7BB1C001CCF6A /* CPUTuneCore.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTuneCore.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D5861721A7BB1C001CCF6A /* CPUTune.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUTune.hpp; sourceTree = "<group>"; };
 		E8D5861921A7BB1C001CCF6A /* CPUTune.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUTune.cpp; sourceTree = "<group>"; };
 		E8D5861B21A7BB1C001CCF6A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -54,8 +50,6 @@
 		E81A35CA21AA787500A101FD /* Docs */ = {
 			isa = PBXGroup;
 			children = (
-				E81A35CB21AA78C100A101FD /* README.md */,
-				E81A35CD21AA7B6F00A101FD /* Changelog.md */,
 			);
 			path = Docs;
 			sourceTree = "<group>";
@@ -72,7 +66,7 @@
 		E8D5861521A7BB1C001CCF6A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E8D5861421A7BB1C001CCF6A /* CPUTune.kext */,
+				E8D5861421A7BB1C001CCF6A /* CPUTuneCore.kext */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -115,9 +109,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		E8D5861321A7BB1C001CCF6A /* CPUTune */ = {
+		E8D5861321A7BB1C001CCF6A /* CPUTuneCore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E8D5861E21A7BB1C001CCF6A /* Build configuration list for PBXNativeTarget "CPUTune" */;
+			buildConfigurationList = E8D5861E21A7BB1C001CCF6A /* Build configuration list for PBXNativeTarget "CPUTuneCore" */;
 			buildPhases = (
 				E8D5860F21A7BB1C001CCF6A /* Headers */,
 				E8D5861021A7BB1C001CCF6A /* Sources */,
@@ -128,9 +122,9 @@
 			);
 			dependencies = (
 			);
-			name = CPUTune;
+			name = CPUTuneCore;
 			productName = CPUTune;
-			productReference = E8D5861421A7BB1C001CCF6A /* CPUTune.kext */;
+			productReference = E8D5861421A7BB1C001CCF6A /* CPUTuneCore.kext */;
 			productType = "com.apple.product-type.kernel-extension";
 		};
 /* End PBXNativeTarget section */
@@ -148,19 +142,20 @@
 					};
 				};
 			};
-			buildConfigurationList = E8D5860E21A7BB1C001CCF6A /* Build configuration list for PBXProject "CPUTune" */;
+			buildConfigurationList = E8D5860E21A7BB1C001CCF6A /* Build configuration list for PBXProject "CPUTuneCore" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = E8D5860A21A7BB1C001CCF6A;
 			productRefGroup = E8D5861521A7BB1C001CCF6A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E8D5861321A7BB1C001CCF6A /* CPUTune */,
+				E8D5861321A7BB1C001CCF6A /* CPUTuneCore */,
 			);
 		};
 /* End PBXProject section */
@@ -170,8 +165,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E81A35CC21AA78C100A101FD /* README.md in Resources */,
-				E81A35CE21AA7B6F00A101FD /* Changelog.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,7 +334,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E8D5860E21A7BB1C001CCF6A /* Build configuration list for PBXProject "CPUTune" */ = {
+		E8D5860E21A7BB1C001CCF6A /* Build configuration list for PBXProject "CPUTuneCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E8D5861C21A7BB1C001CCF6A /* Debug */,
@@ -350,7 +343,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E8D5861E21A7BB1C001CCF6A /* Build configuration list for PBXNativeTarget "CPUTune" */ = {
+		E8D5861E21A7BB1C001CCF6A /* Build configuration list for PBXNativeTarget "CPUTuneCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E8D5861F21A7BB1C001CCF6A /* Debug */,

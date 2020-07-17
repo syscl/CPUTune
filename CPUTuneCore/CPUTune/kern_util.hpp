@@ -17,6 +17,9 @@
 #define xConcat(a, b) Concat(a, b)
 #define Concat(a, b) a ## b
 
+// Change it when you want to get the debug log on disk
+#define DEBUG_AFTER_BOOTSTRAP 0
+
 /**
  *  Prefix name with your plugin name (to ease symbolication and avoid conflicts)
  */
@@ -38,11 +41,26 @@ extern uint32_t ADDPR(debugPrintDelay);
  *
  *  @param str    printf-like string
  */
-#define myLOG(str, ...)                                                                          \
+#define LOG(str, ...)                                                                            \
     do {                                                                                         \
-        cputune_os_log("CPUTune @ " str "\n", ## __VA_ARGS__);                                   \
+        cputune_os_log("%s:%d: ", __func__, __LINE__);                                           \
+        cputune_os_log(str "\n", ## __VA_ARGS__);                                                \
     } while (0)
 
+/**
+ *  Write debug log (DBGLOG) to system log with kernel extension name
+ *
+ *  @param str    printf-like string
+ */
+#if DEBUG
+#define DBGLOG(str, ...)                                                                        \
+    do {                                                                                        \
+        cputune_os_log("DEBUG %s:%d: ", __func__, __LINE__);                                    \
+        cputune_os_log(str "\n", ## __VA_ARGS__);                                               \
+    } while (0)
+#else
+#define DBGLOG(str, ...) do {} while(0)
+#endif
 
 /**
  *  Write to system log
@@ -77,6 +95,8 @@ EXPORT extern "C" void cputune_os_log(const char *format, ...);
  */
 static constexpr const char *bootargOff  {"-cputoff"};          // Disable the kext
 static constexpr const char *bootargBeta {"-cputbeta"};         // Force enable the kext on unsupported os
+
+extern kmod_info_t kmod_info;
 
 /**
  *  Known kernel versions
@@ -142,12 +162,12 @@ constexpr size_t parseModuleVersion(const char *version) {
 }
 
 /**
-*  Convert a hexicimal string to a long integer
-*
-*  @param hex string literal representing the hex value
-*
-*  @return long integer base 10
-*/
+ *  Convert a hexicimal string to a long integer
+ *
+ *  @param hex string literal representing the hex value
+ *
+ *  @return long integer base 10
+ */
 inline long hexToInt(const char *hex) {
     int base = 16;
     for (const char *c = hex; *c != '\0'; c++) {
@@ -230,7 +250,7 @@ static const char kextVersion[] {
  *
  *  @return allocated buffer on success or nullptr on error
  */
-EXPORT uint8_t *readFileNBytes(const char* path, off_t off, size_t bytes);
+EXPORT uint8_t *readFileAsBytes(const char* path, off_t off, size_t bytes);
 
 
 #endif /* kern_util_hpp */

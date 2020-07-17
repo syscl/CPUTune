@@ -1,5 +1,70 @@
 CPUTune Changelog
 =======================
+#### v2.2.2
+
+- Renamed CPUTune.kext to CPUTuneCore.kext
+
+#### v2.2.1
+
+- Fixed a kernel panic when resart the timer in readConfigAtRuntime()
+
+#### v2.2.0
+
+- Fixed return status in start()
+- Reverted to less aggressive MSR writters with null pointer protection
+- Removed redudant log in setIfNotEqual
+
+#### v2.1.9
+
+- Fixed some nits
+
+#### v2.1.8
+
+- Protected against null pointer
+- Fixed the readConfigAtRuntime read and set logic (use setIfNotEqual)
+- Added Base to know region as new Xcode
+
+#### v 2.1.7
+
+- Fixed the kernel panic at boostrap due to write log to filesystem
+
+#### v 2.1.6
+
+- Fixed a kernel panic that reads MSR_IA32_HWP_REQUEST on CPUs unsupport HWP
+
+#### v2.1.5
+
+- Fixed the NVRAM log string buffer
+
+#### v2.1.4
+
+- Add version info for CPUTune; rename readFileNBytes to readFileAsBytes 
+
+#### v2.1.3
+
+- Add line number, better code style for LOG and DBGLOG
+
+#### v2.1.2
+
+- Better logging with function name, more readable
+
+#### v2.1.1
+
+- Fixed timer sounce timeout in ```CPUTune::start```
+
+#### v2.1.0
+
+- Introduce ```DBGLOG()``` macro to reduce the log noise
+- Rename ```myLOG()``` to ```LOG()```
+
+#### v2.0.9
+
+- Remove unused header in CPUInfo's header; bump to the right version
+
+#### v2.0.8
+
+- Check turbo rate limit RW/RO before writting to MSR
+
 #### v2.0.7
 
 - Fix memory leak by freeing buffer after use
@@ -110,7 +175,7 @@ CPUTune Changelog
 
 #### v1.7.0
 - Fixed compatible issues (supported OS X Mountain Lion and Xcode 3.2)
-- Fixed code logic of HWP Enable, details can be fond [here](https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf)
+- Fixed code logic of HWP Enable, details can be found [here](https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf)
 
 #### v1.6.5
 - Implemented Timer Event based feature for dynamic control CPU Performance at runtime 
@@ -124,7 +189,7 @@ CPUTune Changelog
 - Unsupported version check 
 - Fixed memeory leak
 
-#### v 1.0.1
+#### v1.0.1
 - Fixed enableTurboBoost().
 
 #### v1.0.0

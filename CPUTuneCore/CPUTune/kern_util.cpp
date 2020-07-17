@@ -26,25 +26,25 @@ errno_t writeBufferToFile(const char *path, char *buffer) {
     
     if (ctxt) {
         if ((err = vnode_open(path, fmode, cmode, VNODE_LOOKUP_NOFOLLOW, &vp, ctxt))) {
-            myLOG("writeBufferToFile: vnode_open(%s) failed with error %d!\n", path, err);
+            LOG("vnode_open(%s) failed with error %d!", path, err);
         } else {
             if ((err = vnode_isreg(vp)) == VREG) {
                 if ((err = vn_rdwr(UIO_WRITE, vp, buffer, length, logFileOffset, UIO_SYSSPACE, IO_NOCACHE|IO_NODELOCKED|IO_UNIT, vfs_context_ucred(ctxt), (int *) 0, vfs_context_proc(ctxt)))) {
-                    myLOG("writeBufferToFile: vn_rdwr(%s) failed with error %d!\n", path, err);
+                    LOG("vn_rdwr(%s) failed with error %d!", path, err);
                 } else {
                     logFileOffset += length;
                 }
             } else {
-                myLOG("writeBufferToFile: vnode_isreg(%s) failed with error %d!\n", path, err);
+                LOG("vnode_isreg(%s) failed with error %d!", path, err);
             }
             
             if ((err = vnode_close(vp, FWASWRITTEN, ctxt))) {
-                myLOG("writeBufferToFile: vnode_close(%s) failed with error %d!\n", path, err);
+                LOG("vnode_close(%s) failed with error %d!", path, err);
             }
         }
         vfs_context_rele(ctxt);
     } else {
-        myLOG("writeBufferToFile: cannot obtain ctxt!\n");
+        LOG("cannot obtain ctxt!");
         err = 0xFFFF;
     }
     
@@ -54,14 +54,14 @@ errno_t writeBufferToFile(const char *path, char *buffer) {
 int readFileData(void *buffer, off_t off, size_t size, vnode_t vnode, vfs_context_t ctxt) {
     uio_t uio = uio_create(1, off, UIO_SYSSPACE, UIO_READ);
     if (!uio) {
-        // myLOG("readFileData: uio_create returned null!");
+        // LOG("readFileData: uio_create returned null!");
         return EINVAL;
     }
     
     // imitate the kernel and read a single page from the file
     int error = uio_addiov(uio, CAST_USER_ADDR_T(buffer), size);
     if (error) {
-        // myLOG("readFileData: uio_addiov returned error %d!", error);
+        // LOG("readFileData: uio_addiov returned error %d!", error);
         return error;
     }
     
@@ -77,7 +77,7 @@ int readFileData(void *buffer, off_t off, size_t size, vnode_t vnode, vfs_contex
     return error;
 }
 
-uint8_t *readFileNBytes(const char* path, off_t off, size_t bytes) {
+uint8_t *readFileAsBytes(const char* path, off_t off, size_t bytes) {
     vnode_t vnode = NULLVP;
     vfs_context_t ctx = vfs_context_create(nullptr);
     
@@ -129,8 +129,9 @@ void cputune_os_log(const char *format, ...) {
     if (ml_get_interrupts_enabled())
         IOLog("%s", tmp);
     
-#if DEBUG
+#if (DEBUG && DEBUG_AFTER_BOOTSTRAP)
     // Write log to path
+    // Note we cannot write the log at bootstrap which will cause kernel panic
     const char *path = "/var/log/cputune.kext.log";
     writeBufferToFile(path, tmp);
 #endif /* DEBUG */
