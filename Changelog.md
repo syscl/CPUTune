@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.2.4
+
+- Fixed the type casting issue for buffer in readFileAsBytes()
+
 #### v2.2.3
 
 - Attempt to fix the memory leak in readFileAsBytes()
