@@ -97,7 +97,7 @@ uint8_t *readFileAsBytes(const char* path, off_t off, size_t bytes) {
             if (readFileData(buffer, 0, bytes, vnode, ctx)) {
                 // fail to read file
                 if (buffer) {
-                    kern_os_free(buffer)
+                    kern_os_free(buffer);
                     buffer = nullptr;
                 }
             } else {
