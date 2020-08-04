@@ -89,8 +89,10 @@ private:
     
     template<typename T>
     static void deleter(T *&p) {
-        delete p;
-        p = nullptr;
+        if (p) {
+            kern_os_free(p);
+            p = nullptr;
+        }
     }
 };
 

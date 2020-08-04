@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.2.3
+
+- Attempt to fix the memory leak in readFileAsBytes()
+
 #### v2.2.2
 
 - Renamed CPUTune.kext to CPUTuneCore.kext

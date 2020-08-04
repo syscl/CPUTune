@@ -93,11 +93,11 @@ uint8_t *readFileAsBytes(const char* path, off_t off, size_t bytes) {
         
         bytes = min(bytes, size);
         if (bytes > 0) {
-            buffer = new uint8_t[bytes + 1];
+            buffer = kern_os_malloc(sizeof(uint8_t) * (bytes + 1))
             if (readFileData(buffer, 0, bytes, vnode, ctx)) {
                 // fail to read file
                 if (buffer) {
-                    delete buffer;
+                    kern_os_free(buffer)
                     buffer = nullptr;
                 }
             } else {
