@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v2.2.5
+
+- Added missing semicolon
+
 #### v2.2.4
 
 - Fixed the type casting issue for buffer in readFileAsBytes()
