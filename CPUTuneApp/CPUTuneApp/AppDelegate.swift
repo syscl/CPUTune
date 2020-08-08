@@ -207,7 +207,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func saveSettings() {
         let strTurboRatioLimits: String = self.viewDataStore.turboRatioLimits.map {v in
-            v.value
+            String(Int(v.value) ?? 0, radix: 16, uppercase: false)
         }.joined()
         
         persistSettings(
