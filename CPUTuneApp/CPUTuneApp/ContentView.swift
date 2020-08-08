@@ -9,12 +9,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var dataStore: ViewDataStore
+    
     var body: some View {
-        Text("Hello, World!")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack {
+            Text("Hello, World!")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            HStack {
+                Button(action: {}) {Text("Run")}
+            }
+        }.padding()
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
