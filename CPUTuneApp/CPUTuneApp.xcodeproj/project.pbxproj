@@ -14,6 +14,7 @@
 		E8E1904024B275D60067C47C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8E1903E24B275D60067C47C /* Main.storyboard */; };
 		E8E1904C24B275D60067C47C /* CPUTuneAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1904B24B275D60067C47C /* CPUTuneAppTests.swift */; };
 		E8E1905724B275D60067C47C /* CPUTuneAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1905624B275D60067C47C /* CPUTuneAppUITests.swift */; };
+		F9C6DA3224C61189005532FA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C6DA3124C61189005532FA /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		E8E1905224B275D60067C47C /* CPUTuneAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTuneAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8E1905624B275D60067C47C /* CPUTuneAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUTuneAppUITests.swift; sourceTree = "<group>"; };
 		E8E1905824B275D60067C47C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F9C6DA3124C61189005532FA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			children = (
 				E8E1903524B275D50067C47C /* AppDelegate.swift */,
 				E8E1903724B275D50067C47C /* ContentView.swift */,
+				F9C6DA3124C61189005532FA /* SettingsView.swift */,
 				E8E1903924B275D60067C47C /* Assets.xcassets */,
 				E8E1903E24B275D60067C47C /* Main.storyboard */,
 				E8E1904124B275D60067C47C /* Info.plist */,
@@ -266,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9C6DA3224C61189005532FA /* SettingsView.swift in Sources */,
 				E8E1903824B275D50067C47C /* ContentView.swift in Sources */,
 				E8E1903624B275D50067C47C /* AppDelegate.swift in Sources */,
 			);
