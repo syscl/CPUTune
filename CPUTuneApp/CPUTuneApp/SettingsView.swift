@@ -10,12 +10,15 @@ struct SettingsView: View {
                 Toggle(isOn: self.$dataStore.enableTurboBoost) {
                     Text(LocalizedStringKey("Enable turbo boost"))
                 }
+                Toggle(isOn: self.$dataStore.enableProcHot) {
+                    Text(LocalizedStringKey("Enable proc hot"))
+                }
                 HStack {
-                    Text(LocalizedStringKey("HWP reqest value"))
+                    Text(LocalizedStringKey("HWP request value"))
                         .multilineTextAlignment(.leading)
                         .frame(minWidth:110, alignment: .leading)
                     TextField(
-                        LocalizedStringKey("HWP reqest value"),
+                        LocalizedStringKey("HWP request value"),
                         text: self.$dataStore.hwpRequestValue
                     )
                 }
@@ -29,9 +32,6 @@ struct SettingsView: View {
                         )
                     }
                 }
-                Toggle(isOn: self.$dataStore.enableProcHot) {
-                    Text(LocalizedStringKey("Enable proc hot"))
-                }
                 HStack {
                     Stepper(
                     value: self.$dataStore.updateTimeInterval,
@@ -40,9 +40,6 @@ struct SettingsView: View {
                     ) {
                         Text(LocalizedStringKey("Update time inverval (second): \(self.dataStore.updateTimeInterval / 1000)"))
                     }
-                }
-                Toggle(isOn: self.$dataStore.enableRurboBoost) {
-                    Text(LocalizedStringKey("Eable turbo boost"))
                 }
             }.padding()
             HStack {

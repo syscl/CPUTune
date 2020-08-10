@@ -99,6 +99,15 @@ static constexpr const char *bootargBeta {"-cputbeta"};         // Force enable 
 extern kmod_info_t kmod_info;
 
 /**
+ * C-stylememory management from libkern, missing from headers
+ */
+extern "C" {
+    extern void *kern_os_malloc(size_t size);
+    extern void *kern_os_realloc(void * addr, size_t size);
+    extern void kern_os_free(void * addr);
+}
+
+/**
  *  Known kernel versions
  */
 enum KernelVersion {
