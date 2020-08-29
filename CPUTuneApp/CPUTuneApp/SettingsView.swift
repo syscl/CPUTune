@@ -32,15 +32,6 @@ struct SettingsView: View {
                         )
                     }
                 }
-                HStack {
-                    Stepper(
-                    value: self.$dataStore.updateTimeInterval,
-                    in: 0...600000,
-                    step: 1000
-                    ) {
-                        Text(LocalizedStringKey("Update time inverval (second): \(self.dataStore.updateTimeInterval / 1000)"))
-                    }
-                }
             }.padding()
             HStack {
                 Button(action: {self.dataStore.settingsCancel()}) {
