@@ -235,7 +235,7 @@ void CPUTune::readConfigAtRuntime(OSObject *owner, IOTimerEventSource *sender)
     // restart the timer
     if (timerSource && !this->isInactive()) {
         // Don't use sender here which will cause MBP8,2(SANDYBRIDGE) KP
-        timerSource->setTimeout(updateInterval);
+        timerSource->setTimeoutMS(updateInterval);
     }
 }
 
