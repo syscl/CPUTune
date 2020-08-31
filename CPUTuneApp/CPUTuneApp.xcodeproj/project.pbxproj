@@ -14,6 +14,7 @@
 		E8E1904024B275D60067C47C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8E1903E24B275D60067C47C /* Main.storyboard */; };
 		E8E1904C24B275D60067C47C /* CPUTuneAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1904B24B275D60067C47C /* CPUTuneAppTests.swift */; };
 		E8E1905724B275D60067C47C /* CPUTuneAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E1905624B275D60067C47C /* CPUTuneAppUITests.swift */; };
+		F9791F8C24E214A9001BD7D2 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9791F8B24E214A9001BD7D2 /* Utils.swift */; };
 		F9C6DA3224C61189005532FA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C6DA3124C61189005532FA /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		E8E1905224B275D60067C47C /* CPUTuneAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CPUTuneAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8E1905624B275D60067C47C /* CPUTuneAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUTuneAppUITests.swift; sourceTree = "<group>"; };
 		E8E1905824B275D60067C47C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F9791F8B24E214A9001BD7D2 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		F9C6DA3124C61189005532FA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,6 +105,7 @@
 				E8E1903524B275D50067C47C /* AppDelegate.swift */,
 				E8E1903724B275D50067C47C /* ContentView.swift */,
 				F9C6DA3124C61189005532FA /* SettingsView.swift */,
+				F9791F8B24E214A9001BD7D2 /* Utils.swift */,
 				E8E1903924B275D60067C47C /* Assets.xcassets */,
 				E8E1903E24B275D60067C47C /* Main.storyboard */,
 				E8E1904124B275D60067C47C /* Info.plist */,
@@ -272,6 +275,7 @@
 				F9C6DA3224C61189005532FA /* SettingsView.swift in Sources */,
 				E8E1903824B275D50067C47C /* ContentView.swift in Sources */,
 				E8E1903624B275D50067C47C /* AppDelegate.swift in Sources */,
+				F9791F8C24E214A9001BD7D2 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
