@@ -1,5 +1,9 @@
 CPUTune Changelog
 =======================
+#### v 2.2.6
+
+- Corrected the timeout unit from nano to second to fix the memory leak
+
 #### v2.2.5
 
 - Added missing semicolon
