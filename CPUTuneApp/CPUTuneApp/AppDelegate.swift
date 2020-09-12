@@ -12,6 +12,7 @@ import SwiftUI
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     var viewDataStore: ViewDataStore!
+    var settingsEntity: SettingsEntity!
     
     var window: NSWindow!
     var settingsWindow: NSWindow!
@@ -37,29 +38,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func initViewDataStore() {
         self.viewDataStore = ViewDataStore()
         
-        let settingValues = getSettings()
-
-        self.viewDataStore.enableTurboBoost = settingValues.0
-        self.viewDataStore.hwpRequestValue = settingValues.1
-        self.viewDataStore.enableProcHot = settingValues.3
-        let strTurboRatioLimits = settingValues.2
-        
         let cpuCount = getPhysicalCPUCount()
         
-        var trlList = Array(
-            repeating: TRLItem(id: 0, value: ""),
-            count: cpuCount
-        )
-        
-        for i in 0..<cpuCount {
-            var limitValue: String = ""
-            if strTurboRatioLimits.count > i * 2 {
-                limitValue = subString(strTurboRatioLimits, i * 2, i * 2 + 2)
-                limitValue = String(UInt(limitValue, radix: 16) ?? 0)
-            }
-            trlList[i] = TRLItem(id: i, value: limitValue)
+        self.settingsEntity = SettingsEntity()
+        do {
+            try self.settingsEntity.load()
+            mapSettingsEntityToDataStore(self.settingsEntity, self.viewDataStore, cpuCount)
+        } catch {
+            self.viewDataStore.showErrorForSettings = true
+            self.viewDataStore.errorMsgForSettings = error.localizedDescription
         }
-        self.viewDataStore.turboRatioLimits = trlList
     }
     
     private func initStateBarMenu() {
@@ -92,42 +80,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.settingsWindow.orderOut(nil)
         }
         self.viewDataStore.settingsConfirm = {
-            self.settingsWindow.orderOut(nil)
-            self.saveSettings()
+            do {
+                try self.saveSettings()
+                self.settingsWindow.orderOut(nil)
+            } catch {
+                self.viewDataStore.showErrorForSettings = true
+                self.viewDataStore.errorMsgForSettings = error.localizedDescription
+            }
         }
         self.viewDataStore.settingsApply = {
-            self.saveSettings()
+            do {
+                try self.saveSettings()
+            } catch {
+                self.viewDataStore.showErrorForSettings = true
+                self.viewDataStore.errorMsgForSettings = error.localizedDescription
+            }
         }
     }
     
-    private func saveSettings() {
-        let strTurboRatioLimits: String = self.viewDataStore.turboRatioLimits.map {v in
-            String(format: "%0.2x", UInt(v.value) ?? 0)
-        }.joined()
+    private func saveSettings() throws {
+        mapDataStoreToSettingsEntity(self.viewDataStore, self.settingsEntity)
         
-        persistSettings(
-            self.viewDataStore.enableTurboBoost,
-            self.viewDataStore.hwpRequestValue,
-            strTurboRatioLimits,
-            self.viewDataStore.enableProcHot
-        )
+        try self.settingsEntity.persist()
     }
-}
-
-final class ViewDataStore: ObservableObject {
-    @Published var running: Bool = false
-    
-    @Published var enableTurboBoost: Bool = false
-    @Published var enableProcHot: Bool = false
-    @Published var hwpRequestValue: String = ""
-    @Published var turboRatioLimits: [TRLItem] = []
-    
-    var settingsCancel: () -> () = {}
-    var settingsConfirm: () -> () = {}
-    var settingsApply: () -> () = {}
-}
-
-struct TRLItem: Identifiable {
-    let id: Int
-    var value: String
 }

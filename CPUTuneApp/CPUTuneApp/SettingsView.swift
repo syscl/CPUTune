@@ -45,7 +45,13 @@ struct SettingsView: View {
                     Text(LocalizedStringKey("Apply"))
                 }
             }.padding()
-        }.padding().frame(minWidth: 550)
+        }.padding().frame(minWidth: 550).alert(isPresented: self.$dataStore.showErrorForSettings) {
+            Alert(
+                title: Text("Error"),
+                message: Text(self.dataStore.errorMsgForSettings),
+                dismissButton: .default(Text("Confirm"))
+            )
+        }
     }
 }
 
