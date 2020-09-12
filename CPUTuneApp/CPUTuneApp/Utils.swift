@@ -1,10 +1,40 @@
 
 import Foundation
 
-let pathCPUTuneTurboBoostRT: String = "/tmp/CPUTuneTurboBoostRT.conf"
-let pathHWPRequest: String = "/tmp/HWPRequest.conf"
-let pathTurboRatioLimit: String = "/tmp/TurboRatioLimit.conf"
-let pathCPUTuneProcHotRT: String = "/tmp/CPUTuneProcHotRT.conf"
+final class ViewDataStore: ObservableObject {
+    @Published var running: Bool = false
+    
+    @Published var enableTurboBoost: Bool = false
+    @Published var enableProcHot: Bool = false
+    @Published var hwpRequestValue: String = ""
+    @Published var turboRatioLimits: [TRLItem] = []
+    
+    @Published var showErrorForSettings: Bool = false
+    @Published var errorMsgForSettings: String = ""
+    
+    var settingsCancel: () -> () = {}
+    var settingsConfirm: () -> () = {}
+    var settingsApply: () -> () = {}
+}
+
+struct TRLItem: Identifiable {
+    let id: Int
+    var value: String
+}
+
+class ErrorWithMessage: LocalizedError {
+    private var message: String = ""
+    
+    init(_ msg: String) {
+        self.message = msg
+    }
+    
+    public var localizedDescription: String {
+        get {
+            return self.message
+        }
+    }
+}
 
 func getPhysicalCPUCount() -> Int {
     var resultSize = 0
@@ -30,83 +60,36 @@ func subString(_ inputString: String, _ start: Int) -> String {
     return subString(inputString, start, inputString.count)
 }
 
-func getSettings() -> (Bool, String, String, Bool) {
-    var turboBoost: String = "0"
-    var hwpRequest: String = ""
-    var turboRatioLimit: String = ""
-    var procHot: String = "0"
+func mapSettingsEntityToDataStore(_ settings: SettingsEntity, _ dataStore: ViewDataStore, _ cpuCount: Int) {
+    dataStore.enableTurboBoost = settings.turboBoost
+    dataStore.hwpRequestValue = settings.hwpRequest
+    dataStore.enableProcHot = settings.procHot
     
-    do {
-        turboBoost = try String(contentsOfFile: pathCPUTuneTurboBoostRT, encoding: .ascii)
-    } catch {
-        turboBoost = "0"
-    }
+    let trlValues = settings.getTurboRatioLimitAsArray()
     
-    do {
-        hwpRequest = try String(contentsOfFile: pathHWPRequest, encoding: .ascii)
-    } catch {
-        hwpRequest = ""
-    }
-
-    do {
-        turboRatioLimit = try String(contentsOfFile: pathTurboRatioLimit, encoding: .ascii)
-    } catch {
-        turboRatioLimit = ""
-    }
-    
-    do {
-        procHot = try String(contentsOfFile: pathCPUTuneProcHotRT, encoding: .ascii)
-    } catch {
-        procHot = "0"
-    }
-
-    return (
-        turboBoost == "1",
-        subString(hwpRequest, 2),
-        subString(turboRatioLimit, 2),
-        procHot == "1"
+    var trlList = Array(
+        repeating: TRLItem(id: 0, value: ""),
+        count: cpuCount
     )
+    
+    for i in 0..<cpuCount {
+        if trlValues.count > i {
+            trlList[i] = TRLItem(id: i, value: String(trlValues[i]))
+        } else {
+            trlList[i] = TRLItem(id: i, value: "")
+        }
+    }
+    
+    dataStore.turboRatioLimits = trlList
 }
 
-func persistSettings(
-    _ turboBoost: Bool,
-    _ hwpRequest: String,
-    _ turboRatioLimit: String,
-    _ procHot: Bool
-) {
-    do {
-        let stringContent = turboBoost ? "1" : "0"
-        try stringContent.write(
-            toFile: pathCPUTuneTurboBoostRT,
-            atomically: false,
-            encoding: .ascii
-        )
-    } catch {}
-
-    do {
-        try "0x\(hwpRequest)".write(
-            toFile: pathHWPRequest,
-            atomically: false,
-            encoding: .ascii
-        )
-    } catch {}
-
-    do {
-
-        try "0x\(turboRatioLimit)".write(
-            toFile: pathTurboRatioLimit,
-            atomically: false,
-            encoding: .ascii
-        )
-    } catch {}
-
-    do {
-        let stringContent = procHot ? "1" : "0"
-        try stringContent.write(
-            toFile: pathCPUTuneProcHotRT,
-            atomically: false,
-            encoding: .ascii
-        )
-    } catch {}
+func mapDataStoreToSettingsEntity(_ dataStore: ViewDataStore, _ settings: SettingsEntity) {
+    settings.turboBoost = dataStore.enableTurboBoost
+    settings.hwpRequest = dataStore.hwpRequestValue
+    settings.procHot = dataStore.enableProcHot
+    
+    let trlValues = dataStore.turboRatioLimits.map {v in
+        UInt(v.value) ?? 0
+    }
+    settings.setTurboRatioLimitByArray(trlValues)
 }
-
