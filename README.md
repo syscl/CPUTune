@@ -12,6 +12,15 @@ An open source kernel extension enables dynamic CPU performance tuning at runtim
 - Implements TimerEvent-based responses for dynamical switching Turbo Boost and Speed Shift at runtime
 - Allows System Integrity Protection (SIP) control a bit easier via Info.plist setting 
 
+
+#### Installation
+- [Disable the System Integrity Protection](https://developer.apple.com/documentation/security/disabling_and_enabling_system_integrity_protection), reboot
+- Download the repo and open the `CPUTuneCore/CPUTuneCore.xcodeproj` via Xcode
+- Navigate to `Product` then click `Build`. Once the compiled completed, you will find `CPUTuneCore.kext` in the `Product` folder, copy it to `/Library/Extensions`
+- Change the `CPUTuneCore.kext` ownership to `root:wheel`, mode to `rwxr-xr-x` (or `755`)
+- Rebuild the kernel cache in terminal: `sudo touch /Library/Extensions; sudo kextcache -i /`, reboot
+- [Enable the SIP](https://developer.apple.com/documentation/security/disabling_and_enabling_system_integrity_protection) back and reboot
+
 #### Boot arguments
 - Add `-cputoff` to disable CPUTune
 - Add `-cputbeta` to enable CPUTune on unsupported os versions (10.15 and below are enabled by default).
